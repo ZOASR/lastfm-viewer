@@ -5,7 +5,8 @@
     "dev": "turbo dev",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "sbupdtae": "git submodule update --remote --merge"
+    "update": "turbo update",
+    "sbupdate": "git add . && git commit -m \"dev: updated submodules\""
   },
   "devDependencies": {
     "eslint": "^8.54.0",
