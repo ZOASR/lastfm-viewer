@@ -8,13 +8,17 @@
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "update": "turbo update",
-    "sbupdate": "git add . && git commit -m \"dev: updated submodules\""
+    "sbupdate": "git add . && git commit -m \"dev: updated submodules\"",
+    "publish-packages": "turbo run build lint test && changeset version && changeset publish"
   },
   "devDependencies": {
-    "eslint": "^8.54.0",
     "@repo/eslint-config": "workspace:*",
+    "eslint": "^8.54.0",
     "prettier": "^3.1.0",
     "turbo": "latest"
   },
-  "packageManager": "pnpm@8.9.0"
+  "packageManager": "pnpm@8.9.0",
+  "dependencies": {
+    "@changesets/cli": "^2.27.1"
+  }
 }

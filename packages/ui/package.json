@@ -1,5 +1,6 @@
 {
 	"name": "@repo/ui",
+	"version": "0.0.0",
 	"main": "index.css",
 	"type": "module",
 	"exports": {
