@@ -1,0 +1,14 @@
+{
+	"name": "@repo/utils",
+	"version": "1.0.0",
+	"main": "lastfm.ts",
+	"types": "./types.d.ts",
+	"exports": {
+		"./lastftm": "./lastfm.ts",
+		"./MBtypes": "./MBtypes.ts",
+		"./LFMtypes": "./LFMtypes.ts"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
+}

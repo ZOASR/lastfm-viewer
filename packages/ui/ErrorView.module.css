@@ -1,0 +1,7 @@
+.errorView {
+	@apply mx-auto my-4 w-11/12 rounded-lg bg-red-900 p-5 text-xl text-red-200 shadow-inner;
+
+	span {
+		@apply mr-2 rounded-lg bg-black/10 p-2 text-white;
+	}
+}

@@ -1,0 +1,22 @@
+{
+	"name": "@repo/ui",
+	"main": "index.css",
+	"type": "module",
+	"exports": {
+		".": "./index.css",
+		"./PastTracks.module.css": "./PastTracks.module.css",
+		"./LastFMViewer.module.css": "./LastFMViewer.module.css",
+		"./TrackProgressBar.module.css": "./TrackProgressBar.module.css",
+		"./ErrorView.module.css": "./ErrorView.module.css",
+		"./CardFooter.module.css": "./CardFooter.module.css"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"devDependencies": {
+		"autoprefixer": "^10.4.16",
+		"postcss": "^8.4.32",
+		"tailwindcss": "^3.3.6",
+		"@repo/tailwind-config": "workspace:*"
+	}
+}

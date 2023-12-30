@@ -1,0 +1,6 @@
+[submodule "apps/react-lastfm-viewer"]
+	path = apps/react-lastfm-viewer
+	url = https://github.com/ZOASR/react-lastfm-viewer
+[submodule "apps/solid-lastfm-viewer"]
+	path = apps/solid-lastfm-viewer
+	url = https://github.com/ZOASR/solid-lastfm-viewer

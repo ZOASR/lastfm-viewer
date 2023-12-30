@@ -1,0 +1,45 @@
+.scrollable {
+	&::-webkit-scrollbar {
+		width: 1px;
+		height: 2px;
+	}
+	&::-webkit-scrollbar-track {
+		background: transparent;
+		width: 1px;
+		height: 2px;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background-color: rgba(255, 255, 255, 0.5);
+		width: 1px;
+		height: 2px;
+		border-radius: 5px;
+	}
+}
+
+.pastTracks {
+	@apply mb-4 rounded-lg p-0.5 sm:p-4;
+
+	&__title {
+		@apply divider mx-auto mb-0 mt-0.5 w-1/2 rounded-lg p-2 text-xs sm:text-sm;
+	}
+
+	&__track {
+		@apply text-[50%] sm:text-[75%];
+	}
+
+	&__trackTitle {
+		@apply flex-1 text-ellipsis text-start font-black transition-all duration-150 hover:underline;
+	}
+
+	.scrollable {
+		@apply flex w-full items-center justify-between gap-4 overflow-x-scroll whitespace-nowrap;
+
+		&__artist {
+			@apply flex flex-1 items-center justify-start gap-1;
+		}
+		&__date {
+			@apply flex items-center gap-1;
+		}
+	}
+}

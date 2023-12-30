@@ -1,0 +1,54 @@
+{
+  "name": "solid-lastfm-viewer",
+  "private": false,
+  "version": "1.0.5",
+  "description": "A solidjs component to view recent scrobbles for a last.fm user",
+  "keywords": [
+    "lastfm",
+    "last.fm",
+    "last.fm",
+    "music",
+    "scrobbling",
+    "solid"
+  ],
+  "type": "module",
+  "main": "dist/index.umd.js",
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.umd.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "/dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "update": "npm i --legacy-peer-deps && git add . && git commit -m \"update: v%npm_package_version%\" && git tag v%npm_package_version% && git push origin v%npm_package_version% && git-cliff > CHANGELOG.md && git push origin && npm publish"
+  },
+  "dependencies": {
+    "solid-js": "^1.7.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "color.js": "^1.2.0",
+    "prettier": "^3.1.1",
+    "prettier-plugin-tailwindcss": "^0.5.9",
+    "solid-icons": "^1.1.0",
+    "typescript": "^5.0.2",
+    "vite": "^5.0.10",
+    "vite-plugin-solid": "^2.7.0",
+    "@repo/vite-config": "workspace:*",
+    "@repo/tailwind-config": "workspace:*",
+    "@repo/utils": "workspace:*",
+    "@repo/ui": "workspace:*"
+  }
+}
