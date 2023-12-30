@@ -1,5 +1,6 @@
 {
   "private": true,
+  "name": "lastfm-viewer",
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
