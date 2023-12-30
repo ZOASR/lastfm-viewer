@@ -3,7 +3,7 @@ import {
 	LastFmImage,
 	Track,
 	TrackInfoRes,
-	UserRecentTracksRes,
+	UserRecentTracksRes
 } from "./LFMtypes";
 
 import { version as APP_VERSION } from "./package.json";
@@ -37,8 +37,8 @@ const getMBTrackReleases = async (
 	}
 	const musicbrainzApi = await fetch(brainzUrl, {
 		headers: {
-			"User-Agent": `LastFMViewer/${APP_VERSION} `,
-		},
+			"User-Agent": `LastFMViewer/${APP_VERSION} `
+		}
 	});
 	const brainzData: MBObject = await musicbrainzApi.json();
 	if (brainzData.recordings) return brainzData.recordings[0]?.releases;
@@ -49,8 +49,8 @@ const getMBReleaseInfo = async (mbid: string): Promise<ReleaseInfo> => {
 	const brainzUrl = `https://musicbrainz.org/ws/2/release/${mbid}?fmt=json`;
 	const musicbrainzApi = await fetch(brainzUrl, {
 		headers: {
-			"User-Agent": `LastFMViewer/${APP_VERSION} `,
-		},
+			"User-Agent": `LastFMViewer/${APP_VERSION} `
+		}
 	});
 	const releaseInfo: ReleaseInfo = await musicbrainzApi.json();
 	return releaseInfo;
@@ -73,8 +73,8 @@ const getUserTracks = async (
 	const res = await fetch(lastfm_api_url, {
 		method: "GET",
 		headers: {
-			"User-Agent": `LastFMViewer/${APP_VERSION} `,
-		},
+			"User-Agent": `LastFMViewer/${APP_VERSION} `
+		}
 	});
 	if (res.ok) {
 		const data: UserRecentTracksRes = await res.json();
@@ -95,12 +95,12 @@ const getTrackInfo = async (
 	const res = await fetch(lastfm_api_url, {
 		method: "GET",
 		headers: {
-			"User-Agent": `LastFMViewer/${APP_VERSION} `,
-		},
+			"User-Agent": `LastFMViewer/${APP_VERSION} `
+		}
 	});
 	const data: TrackInfoRes = await res.json();
 	if (res.ok) {
-		if (!data.track.album) {
+		if (!(data.track.album.image[3]["#text"] || data.track.album)) {
 			throw new Error("No lastfm album for this track");
 		}
 		return data;
@@ -150,7 +150,7 @@ export const getLatestTrack = async (
 		MBImages: undefined,
 		nowplaying: false,
 		pastTracks: [] as unknown[],
-		duration: 0,
+		duration: 0
 	};
 
 	try {
@@ -166,7 +166,7 @@ export const getLatestTrack = async (
 			MBImages: undefined,
 			nowplaying: isNowplaying,
 			pastTracks: pasttracks as unknown[],
-			duration: duration,
+			duration: duration
 		};
 	} catch (error) {
 		if (error instanceof Error) {
@@ -187,7 +187,7 @@ export const getLatestTrack = async (
 			MBImages: undefined,
 			nowplaying: isNowplaying,
 			pastTracks: pasttracks as unknown[],
-			duration: duration,
+			duration: duration
 		};
 		if (releases) {
 			for (let release of releases) {
@@ -203,12 +203,12 @@ export const getLatestTrack = async (
 					LatestTrack = {
 						trackName: trackName,
 						artistName: artistName,
-						albumTitle: albumTitle,
+						albumTitle: release.title,
 						lastfmImages: lastfmImages,
 						MBImages: images,
 						nowplaying: isNowplaying,
 						pastTracks: pasttracks as unknown[],
-						duration: duration,
+						duration: duration
 					};
 					return LatestTrack;
 				}
