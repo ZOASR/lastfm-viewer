@@ -178,6 +178,9 @@ importers:
 
   packages/ui:
     devDependencies:
+      '@repo/tailwind-config':
+        specifier: workspace:*
+        version: link:../config-tailwind
       autoprefixer:
         specifier: ^10.4.16
         version: 10.4.16(postcss@8.4.32)
