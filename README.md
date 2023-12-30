@@ -39,7 +39,7 @@ pnpm add [react|solid]-lastfm-viewer
 This is a [turborepo](https://turbo.build/repo) development monorepo
 
 ```sh
-git clone https://github.com/ZOASR/lastfm-viewer
+git clone https://github.com/ZOASR/lastfm-viewer --recurse-submodules
 cd lastfm-viewer
 ```
 
