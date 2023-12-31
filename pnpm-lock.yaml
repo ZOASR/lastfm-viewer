@@ -195,7 +195,11 @@ importers:
         specifier: ^3.3.6
         version: 3.4.0
 
-  packages/utils: {}
+  packages/utils:
+    devDependencies:
+      color.js:
+        specifier: ^1.2.0
+        version: 1.2.0
 
 packages:
 
