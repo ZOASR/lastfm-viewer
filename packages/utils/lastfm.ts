@@ -103,7 +103,7 @@ const getTrackInfo = async (
 	});
 	const data: TrackInfoRes = await res.json();
 	if (res.ok) {
-		if (!(data.track.album.image[3]["#text"] || data.track.album)) {
+		if (!(data.track.album && data.track.album.image[3]["#text"])) {
 			throw new Error("No lastfm album for this track");
 		}
 		return data;
