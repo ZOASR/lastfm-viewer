@@ -1,10 +1,5 @@
 import { Image, Images, MBObject, Release, ReleaseInfo } from "./MBtypes";
-import {
-	LastFmImage,
-	Track,
-	TrackInfoRes,
-	UserRecentTracksRes
-} from "./LFMtypes";
+import { Track, TrackInfoRes, UserRecentTracksRes } from "./LFMtypes";
 
 import { version as APP_VERSION } from "./package.json";
 
@@ -14,10 +9,9 @@ export interface TrackInfo {
 	trackName: string | undefined;
 	artistName: string | undefined;
 	albumTitle?: string | undefined;
-	MBImages: Image[] | undefined;
-	lastfmImages?: LastFmImage[];
 	nowplaying: boolean | undefined;
 	pastTracks: unknown[] | Track[];
+	imageUrl: string | undefined;
 	duration: number;
 }
 
@@ -117,8 +111,8 @@ export const getLatestTrack = async (
 	let trackName: string = "";
 	let artistName: string = "";
 	let albumTitle: string | undefined = undefined;
-	let lastfmImages: LastFmImage[] | undefined = undefined;
 	let isNowplaying: boolean = false;
+	let imageUrl: string = "";
 	let duration: number = 0;
 	let pasttracks;
 
@@ -146,7 +140,7 @@ export const getLatestTrack = async (
 		trackName: undefined,
 		artistName: undefined,
 		albumTitle: undefined,
-		lastfmImages: undefined,
+		imageUrl: undefined,
 		MBImages: undefined,
 		nowplaying: false,
 		pastTracks: [] as unknown[],
@@ -156,13 +150,13 @@ export const getLatestTrack = async (
 	try {
 		trackInfo = await getTrackInfo(trackName, artistName, api_key);
 		albumTitle = trackInfo.track.album?.title;
-		lastfmImages = trackInfo.track.album?.image;
 		duration = parseInt(trackInfo.track.duration);
+		imageUrl = trackInfo.track.album?.image[3]["#text"];
 		LatestTrack = {
 			trackName: trackName,
 			artistName: artistName,
 			albumTitle: albumTitle,
-			lastfmImages: lastfmImages,
+			imageUrl: imageUrl,
 			MBImages: undefined,
 			nowplaying: isNowplaying,
 			pastTracks: pasttracks as unknown[],
@@ -183,7 +177,7 @@ export const getLatestTrack = async (
 			trackName: trackName,
 			artistName: artistName,
 			albumTitle: albumTitle,
-			lastfmImages: lastfmImages,
+			imageUrl: undefined,
 			MBImages: undefined,
 			nowplaying: isNowplaying,
 			pastTracks: pasttracks as unknown[],
@@ -200,11 +194,12 @@ export const getLatestTrack = async (
 					rleaseInfo["cover-art-archive"].back
 				) {
 					const images: Image[] = await getCAACoverArt(release.id);
+					imageUrl = images[0].thumbnails[250];
 					LatestTrack = {
 						trackName: trackName,
 						artistName: artistName,
 						albumTitle: release.title,
-						lastfmImages: lastfmImages,
+						imageUrl: imageUrl,
 						MBImages: images,
 						nowplaying: isNowplaying,
 						pastTracks: pasttracks as unknown[],
