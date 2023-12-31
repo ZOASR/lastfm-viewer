@@ -1,7 +1,15 @@
 import { Image, Images, MBObject, Release, ReleaseInfo } from "./MBtypes";
 import { Track, TrackInfoRes, UserRecentTracksRes } from "./LFMtypes";
 
+import { average } from "color.js";
+
 import { version as APP_VERSION } from "./package.json";
+
+export interface Colors {
+	primary: string | undefined;
+	secondary: string | undefined;
+	accent: string | undefined;
+}
 
 const lastfm_api_root = "http://ws.audioscrobbler.com/2.0/";
 
@@ -12,6 +20,7 @@ export interface TrackInfo {
 	nowplaying: boolean | undefined;
 	pastTracks: unknown[] | Track[];
 	imageUrl: string | undefined;
+	colors: Colors | undefined;
 	duration: number;
 }
 
@@ -115,7 +124,7 @@ export const getLatestTrack = async (
 	let imageUrl: string = "";
 	let duration: number = 0;
 	let pasttracks;
-
+	let colors: Colors | undefined = undefined;
 	let userData: UserRecentTracksRes;
 	let trackInfo: TrackInfoRes;
 
@@ -141,7 +150,7 @@ export const getLatestTrack = async (
 		artistName: undefined,
 		albumTitle: undefined,
 		imageUrl: undefined,
-		MBImages: undefined,
+		colors: undefined,
 		nowplaying: false,
 		pastTracks: [] as unknown[],
 		duration: 0
@@ -152,12 +161,13 @@ export const getLatestTrack = async (
 		albumTitle = trackInfo.track.album?.title;
 		duration = parseInt(trackInfo.track.duration);
 		imageUrl = trackInfo.track.album?.image[3]["#text"];
+		colors = await getColors(imageUrl);
 		LatestTrack = {
 			trackName: trackName,
 			artistName: artistName,
 			albumTitle: albumTitle,
 			imageUrl: imageUrl,
-			MBImages: undefined,
+			colors: colors,
 			nowplaying: isNowplaying,
 			pastTracks: pasttracks as unknown[],
 			duration: duration
@@ -178,7 +188,7 @@ export const getLatestTrack = async (
 			artistName: artistName,
 			albumTitle: albumTitle,
 			imageUrl: undefined,
-			MBImages: undefined,
+			colors: undefined,
 			nowplaying: isNowplaying,
 			pastTracks: pasttracks as unknown[],
 			duration: duration
@@ -195,12 +205,13 @@ export const getLatestTrack = async (
 				) {
 					const images: Image[] = await getCAACoverArt(release.id);
 					imageUrl = images[0].thumbnails[250];
+					colors = await getColors(imageUrl);
 					LatestTrack = {
 						trackName: trackName,
 						artistName: artistName,
 						albumTitle: release.title,
 						imageUrl: imageUrl,
-						MBImages: images,
+						colors: colors,
 						nowplaying: isNowplaying,
 						pastTracks: pasttracks as unknown[],
 						duration: duration
@@ -212,4 +223,31 @@ export const getLatestTrack = async (
 		}
 	}
 	return LatestTrack;
+};
+
+const getColors = async (imageUrl: string) => {
+	let colorobj: {
+		primary: string;
+		secondary: string;
+		accent: string;
+	} = {
+		primary: "#fff",
+		secondary: "#000",
+		accent: "#888"
+	};
+	const color = await average(imageUrl, {
+		amount: 1,
+		format: "hex",
+		sample: 10
+	});
+	const primary = color as string;
+	const secondary = `hsl(from ${primary} h s calc(calc(l * -0.7) + 1) )`;
+	const accent = `hsl(from ${secondary} h s calc( l * 0.5) )`;
+
+	colorobj = {
+		primary,
+		secondary,
+		accent
+	};
+	return colorobj;
 };
