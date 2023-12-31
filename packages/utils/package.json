@@ -10,5 +10,8 @@
 	},
 	"publishConfig": {
 		"access": "public"
+	},
+	"devDependencies": {
+		"color.js": "^1.2.0"
 	}
 }
