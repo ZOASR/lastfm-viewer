@@ -1,6 +1,7 @@
 {
 	"name": "@repo/utils",
 	"version": "1.0.0",
+	"private": true,
 	"main": "lastfm.ts",
 	"types": "./types.d.ts",
 	"exports": {
