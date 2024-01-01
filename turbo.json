@@ -10,15 +10,11 @@
       ]
     },
     "lint": {},
-    "test":{},
+    "test": {},
     "dev": {
       "cache": false,
       "persistent": true
     },
-    "update": {
-      "dependsOn": [
-        "build"
-      ]
-    }
+    "changelog": {}
   }
 }
