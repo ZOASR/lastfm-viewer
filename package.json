@@ -9,7 +9,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "update": "turbo update",
     "sbupdate": "git add . && git commit -m \"dev: updated submodules\"",
-    "publish-packages": "turbo run build lint test && changeset version && changeset publish"
+    "publish-packages": "turbo run build lint test && changeset version && changeset publish",
+    "changelog": "turbo changelog"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
