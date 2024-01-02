@@ -1,5 +1,5 @@
-import { Image, Images, MBObject, Release, ReleaseInfo } from "./MBtypes";
-import { Track, TrackInfoRes, UserRecentTracksRes } from "./LFMtypes";
+import type { Image, Images, MBObject, Release, ReleaseInfo } from "./MBtypes";
+import type { Track, TrackInfoRes, UserRecentTracksRes } from "./LFMtypes";
 
 import { average } from "color.js";
 
