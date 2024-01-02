@@ -1,5 +1,5 @@
 {
-  "private": false,
+  "private": true,
   "name": "lastfm-viewer",
   "version": "1.0.0",
   "scripts": {
@@ -9,7 +9,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "update": "turbo update",
     "sbupdate": "git add . && git commit -m \"dev: updated submodules\"",
-    "publish-packages": "turbo run build lint test && changeset version && changeset publish",
+    "publish-packages": "turbo run build test && changeset version && changeset publish && turbo customPublish",
     "changelog": "turbo changelog"
   },
   "devDependencies": {
