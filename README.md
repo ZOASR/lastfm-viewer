@@ -1,4 +1,4 @@
-# lastfm-viewer
+# @lastfm-viewer
 
 lastfm-viewer are a collection of ui web components to view recent scrobbles for a [last.fm](last.fm) user, built for: `react` `solidjs`
 
@@ -27,11 +27,11 @@ This is a monorepo hosting the `lastfm-viewer` npm packages:
 Install it:
 
 ```bash
-npm i [react|solid]-lastfm-viewer
+npm i @lastfm-viewer/[react|svelte|solid]
 # or
-yarn add [react|solid]-lastfm-viewer
+yarn add @lastfm-viewer/[react|svelte|solid]
 # or
-pnpm add [react|solid]-lastfm-viewer
+pnpm add @lastfm-viewer/[react|svelte|solid]
 ```
 
 # Get Started
