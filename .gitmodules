@@ -4,3 +4,6 @@
 [submodule "apps/solid-lastfm-viewer"]
 	path = apps/solid-lastfm-viewer
 	url = https://github.com/ZOASR/solid-lastfm-viewer
+[submodule "apps/svelte-lastfm-viewer"]
+	path = apps/svelte-lastfm-viewer
+	url = https://github.com/ZOASR/svelte-lastfm-viewer
