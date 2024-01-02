@@ -5,7 +5,7 @@
 	"main": "lastfm.ts",
 	"types": "./types.d.ts",
 	"exports": {
-		"./lastftm": "./lastfm.ts",
+		"./lastfm": "./lastfm.ts",
 		"./MBtypes": "./MBtypes.ts",
 		"./LFMtypes": "./LFMtypes.ts"
 	},
