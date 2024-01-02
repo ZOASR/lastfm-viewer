@@ -1,19 +1,22 @@
 # @lastfm-viewer
 
-lastfm-viewer are a collection of ui web components to view recent scrobbles for a [last.fm](last.fm) user, built for: `react` `solidjs`
+lastfm-viewer is a collection of ui web components to view recent scrobbles for a [last.fm](last.fm) user, built for: `react` `solidjs` `svelte`
 
 <p align="center" >
-<a href="https://npm.io/package/solid-lastfm-viewer"><img src="https://img.shields.io/badge/maintained%20with-npm-cc00ff.svg?style=for-the-badge&logo=npm" ></a>
-<a href="https://www.npmjs.com/package/solid-lastfm-viewer" alt="solid-lastfm-viewer(npm)">
-<img src="https://img.shields.io/npm/dt/solid-lastfm-viewer?style=for-the-badge&logo=npm&logoColor=red&label=solid-lastfm-viewer" /></a>
-<a href="https://www.npmjs.com/package/react-lastfm-viewer" alt="react-lastfm-viewer(npm)">
-<img src="https://img.shields.io/npm/dt/react-lastfm-viewer?style=for-the-badge&logo=npm&logoColor=red&label=react-lastfm-viewer" /></a>
+<a href="https://npm.io/package/@lastfm-viewer/solid"><img src="https://img.shields.io/badge/maintained%20with-npm-cc00ff.svg?style=for-the-badge&logo=npm" ></a>
+<a href="https://www.npmjs.com/package/@lastfm-viewer/solid" alt="@lastfm-viewer/solid(npm)">
+<img src="https://img.shields.io/npm/dt/@lastfm-viewer/solid?style=for-the-badge&logo=npm&logoColor=red&label=@lastfm-viewer/solid" /></a>
+<a href="https://www.npmjs.com/package/@lastfm-viewer/react" alt="@lastfm-viewer/react(npm)">
+<img src="https://img.shields.io/npm/dt/@lastfm-viewer/react?style=for-the-badge&logo=npm&logoColor=red&label=@lastfm-viewer/react" /></a>
+<a href="https://www.npmjs.com/package/@lastfm-viewer/svelte" alt="@lastfm-viewer/svelte(npm)">
+<img src="https://img.shields.io/npm/dt/@lastfm-viewer/svelte?style=for-the-badge&logo=npm&logoColor=red&label=@lastfm-viewer/svelte" /></a>
 </p>
 
 This is a monorepo hosting the `lastfm-viewer` npm packages:
 
--   <a href="https://github.com/ZOASR/react-lastfm-viewer">@react-lastfm-viewer</a>
--   <a href="https://github.com/ZOASR/solid-lastfm-viewer">@solid-lastfm-viewer</a>
+-   <a href="https://github.com/ZOASR/lastfm-viewer-react">lastfm-viewer-react</a>
+-   <a href="https://github.com/ZOASR/lastfm-viewer-solid">lastfm-viewer-solid</a>
+-   <a href="https://github.com/ZOASR/lastfm-viewer-svelte">lastfm-viewer-svelte</a>
 
 <p align="center">
   <img src="https://github.com/ZOASR/solid-lastfm-viewer/blob/main/images/Preview_1.png" style="border-radius: 10px"/>
@@ -65,5 +68,6 @@ This Turborepo includes the following packages and apps:
 
 ### Apps and Packages
 
--   `react-lastfm-viewer`: [@react-lastfm-viewer](https://github.com/ZOASR/react-lastfm-viewer)
--   `solid-lastfm-viewer`: [@solid-lastfm-viewer](https://github.com/ZOASR/solid-lastfm-viewer)
+-   `lastfm-viewer-react`: [@react-lastfm-viewer](https://github.com/ZOASR/lastfm-viewer-react)
+-   `lastfm-viewer-solid`: [@solid-lastfm-viewer](https://github.com/ZOASR/lastfm-viewer-solid)
+-   `lastfm-viewer-svelte`: [@svelte-lastfm-viewer](https://github.com/ZOASR/lastfm-viewer-svelte)
