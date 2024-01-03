@@ -9,7 +9,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "update": "turbo update",
     "sbupdate": "git add . && git commit -m \"dev: updated submodules\"",
-    "publish-packages": "turbo run build test && changeset version && changeset publish && turbo customPublish",
+    "publish-packages": "changeset version && turbo run build test && turbo changelog && changeset publish",
     "changelog": "turbo changelog"
   },
   "devDependencies": {
