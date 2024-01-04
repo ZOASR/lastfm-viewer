@@ -7,7 +7,9 @@
 	"exports": {
 		"./lastfm": "./lastfm.ts",
 		"./MBtypes": "./MBtypes.ts",
-		"./LFMtypes": "./LFMtypes.ts"
+		"./LFMtypes": "./LFMtypes.ts",
+		"./utils": "./utils.ts",
+		"./types": "./types.ts"
 	},
 	"publishConfig": {
 		"access": "public"

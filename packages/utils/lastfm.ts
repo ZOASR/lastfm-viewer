@@ -1,31 +1,12 @@
 import type { Image, Images, MBObject, Release, ReleaseInfo } from "./MBtypes";
-import type { Track, TrackInfoRes, UserRecentTracksRes } from "./LFMtypes";
+import type { TrackInfoRes, UserRecentTracksRes } from "./LFMtypes";
+import { version as APP_VERSION } from "./package.json";
+import { Colors, TrackInfo } from "./types";
+import { wait } from "./utils";
 
 import { average } from "color.js";
 
-import { version as APP_VERSION } from "./package.json";
-
-export interface Colors {
-	primary: string | undefined;
-	secondary: string | undefined;
-	accent: string | undefined;
-}
-
 const lastfm_api_root = "http://ws.audioscrobbler.com/2.0/";
-
-export interface TrackInfo {
-	trackName: string | undefined;
-	artistName: string | undefined;
-	albumTitle?: string | undefined;
-	nowplaying: boolean | undefined;
-	pastTracks: unknown[] | Track[];
-	imageUrl: string | undefined;
-	colors: Colors | undefined;
-	duration: number;
-}
-
-const wait = async (secs: number) =>
-	new Promise((resolve) => setTimeout(resolve, secs));
 
 const getMBTrackReleases = async (
 	trackName: string,
