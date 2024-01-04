@@ -1,8 +1,3 @@
-const identity: (x: any) => any = (x: any) => x;
-export function cloneArray(arr: any[]) {
-	return arr.map(identity);
-}
-
 export const unexpectedErrors = [
 	"NetworkError when attempting to fetch resource.",
 	"Login: User required to be logged in",

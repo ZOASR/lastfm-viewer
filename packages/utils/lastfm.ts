@@ -104,7 +104,7 @@ export const getLatestTrack = async (
 	let isNowplaying: boolean = false;
 	let imageUrl: string = "";
 	let duration: number = 0;
-	let pasttracks;
+	let pasttracks = undefined;
 	let colors: Colors | undefined = undefined;
 	let userData: UserRecentTracksRes;
 	let trackInfo: TrackInfoRes;
@@ -133,7 +133,7 @@ export const getLatestTrack = async (
 		imageUrl: undefined,
 		colors: undefined,
 		nowplaying: false,
-		pastTracks: [] as unknown[],
+		pastTracks: [],
 		duration: 0
 	};
 
@@ -150,7 +150,7 @@ export const getLatestTrack = async (
 			imageUrl: imageUrl,
 			colors: colors,
 			nowplaying: isNowplaying,
-			pastTracks: pasttracks as unknown[],
+			pastTracks: pasttracks,
 			duration: duration
 		};
 	} catch (error) {
@@ -171,7 +171,7 @@ export const getLatestTrack = async (
 			imageUrl: undefined,
 			colors: undefined,
 			nowplaying: isNowplaying,
-			pastTracks: pasttracks as unknown[],
+			pastTracks: pasttracks,
 			duration: duration
 		};
 		if (releases) {
@@ -194,7 +194,7 @@ export const getLatestTrack = async (
 						imageUrl: imageUrl,
 						colors: colors,
 						nowplaying: isNowplaying,
-						pastTracks: pasttracks as unknown[],
+						pastTracks: pasttracks,
 						duration: duration
 					};
 					return LatestTrack;

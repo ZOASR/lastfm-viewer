@@ -10,7 +10,7 @@ export type TrackInfo = {
 	artistName: string | undefined;
 	albumTitle?: string | undefined;
 	nowplaying: boolean | undefined;
-	pastTracks: unknown[] | Track[];
+	pastTracks: Track[] | undefined;
 	imageUrl: string | undefined;
 	colors: Colors | undefined;
 	duration: number;
