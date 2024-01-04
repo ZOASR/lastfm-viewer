@@ -4,13 +4,10 @@ export const unexpectedErrors = [
 	"Failed to fetch"
 ];
 
-export const msToMins = (ms: number) =>
-	Math.floor(ms / 1000 / 60).toLocaleString(undefined, {
-		maximumSignificantDigits: 2
-	});
+export const msToMins = (ms: number) => Math.floor(ms / 1000 / 60);
 export const msToSecs = (ms: number) =>
 	Math.floor((ms / 1000) % 60).toLocaleString(undefined, {
-		maximumSignificantDigits: 2
+		minimumIntegerDigits: 2
 	});
 
 export const wait = async (secs: number) =>
