@@ -1,5 +1,5 @@
 {
-	"name": "@repo/ui",
+	"name": "@lastfm-viewer/ui",
 	"version": "0.0.0",
 	"private": true,
 	"main": "index.css",
@@ -19,6 +19,6 @@
 		"autoprefixer": "^10.4.16",
 		"postcss": "^8.4.32",
 		"tailwindcss": "^3.3.6",
-		"@repo/tailwind-config": "workspace:*"
+		"@lastfm-viewer/tailwind-config": "workspace:*"
 	}
 }

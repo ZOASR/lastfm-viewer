@@ -13,7 +13,7 @@
     "changelog": "turbo changelog"
   },
   "devDependencies": {
-    "@repo/eslint-config": "workspace:*",
+    "@lastfm-viewer/eslint-config": "workspace:*",
     "eslint": "^8.54.0",
     "prettier": "^3.1.0",
     "turbo": "latest"

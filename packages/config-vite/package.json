@@ -1,5 +1,5 @@
 {
-	"name": "@repo/vite-config",
+	"name": "@lastfm-viewer/vite-config",
 	"private": true,
 	"version": "0.0.0",
 	"main": "index.config.js",
