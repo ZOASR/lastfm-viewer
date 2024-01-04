@@ -68,6 +68,6 @@ This Turborepo includes the following packages and apps:
 
 ### Apps and Packages
 
--   `lastfm-viewer-react`: [@react-lastfm-viewer](https://github.com/ZOASR/lastfm-viewer-react)
--   `lastfm-viewer-solid`: [@solid-lastfm-viewer](https://github.com/ZOASR/lastfm-viewer-solid)
--   `lastfm-viewer-svelte`: [@svelte-lastfm-viewer](https://github.com/ZOASR/lastfm-viewer-svelte)
+-   `lastfm-viewer-react`: [@lastfm-viewer/react](https://github.com/ZOASR/lastfm-viewer-react)
+-   `lastfm-viewer-solid`: [@lastfm-viewer/solid](https://github.com/ZOASR/lastfm-viewer-solid)
+-   `lastfm-viewer-svelte`: [@lastfm-viewer/svelte](https://github.com/ZOASR/lastfm-viewer-svelte)
