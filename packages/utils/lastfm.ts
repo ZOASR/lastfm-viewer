@@ -211,10 +211,12 @@ const getColors = async (imageUrl: string) => {
 		primary: string;
 		secondary: string;
 		accent: string;
+		coverShadowColor: string;
 	} = {
 		primary: "#fff",
 		secondary: "#000",
-		accent: "#888"
+		accent: "#888",
+		coverShadowColor: "#00000088"
 	};
 	const color = (await average(imageUrl, {
 		amount: 1,
@@ -231,11 +233,13 @@ const getColors = async (imageUrl: string) => {
 	const primary = `hsl(${hue}, ${sat}%, ${pL}%)`;
 	const secondary = `hsl(${hue}, ${sat}%, ${sL}%)`;
 	const accent = `hsl(${hue}, ${sat}%, ${aL}%)`;
+	const coverShadowColor = `hsla(${hue}, ${sat}%, ${sL}%, 0.5)`;
 
 	colorobj = {
 		primary,
 		secondary,
-		accent
+		accent,
+		coverShadowColor
 	};
 	return colorobj;
 };

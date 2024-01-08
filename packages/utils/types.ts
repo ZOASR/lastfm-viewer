@@ -4,6 +4,7 @@ export type Colors = {
 	primary: string | undefined;
 	secondary: string | undefined;
 	accent: string | undefined;
+	coverShadowColor: string | undefined;
 };
 export type TrackInfo = {
 	trackName: string | undefined;
