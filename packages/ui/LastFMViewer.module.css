@@ -24,6 +24,15 @@
 }
 
 .lfmvCard {
+	font-family: "Inter";
+	line-height: 1.5;
+	font-weight: 400;
+
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-text-size-adjust: 100%;
 	@apply glass relative mx-auto box-border flex h-full w-full flex-col rounded-lg p-4 shadow-xl ring-2 ring-slate-950/5;
 
 	figure {
