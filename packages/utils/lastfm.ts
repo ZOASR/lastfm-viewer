@@ -2,7 +2,7 @@ import type { Image, Images, MBObject, Release, ReleaseInfo } from "./MBtypes";
 import type { TrackInfoRes, UserRecentTracksRes } from "./LFMtypes";
 import { version as APP_VERSION } from "./package.json";
 import { Colors, TrackInfo } from "./types";
-import { wait } from "./utils";
+import { map, rgb2hsl, wait } from "./utils";
 
 import { average } from "color.js";
 
@@ -216,14 +216,21 @@ const getColors = async (imageUrl: string) => {
 		secondary: "#000",
 		accent: "#888"
 	};
-	const color = await average(imageUrl, {
+	const color = (await average(imageUrl, {
 		amount: 1,
-		format: "hex",
-		sample: 10
-	});
-	const primary = color as string;
-	const secondary = `hsl(from ${primary} h s calc(calc(l * -0.7) + 1) )`;
-	const accent = `hsl(from ${secondary} h s calc( l * 0.5) )`;
+		sample: 50
+	})) as number[];
+	const colorHSL = rgb2hsl(color[0], color[1], color[2]);
+	const hue = colorHSL[0];
+	const sat = colorHSL[1];
+
+	const pL = map(colorHSL[2], 0, 100, 0, 30);
+	const sL = 100 - pL;
+	const aL = pL * 1.8;
+
+	const primary = `hsl(${hue}, ${sat}%, ${pL}%)`;
+	const secondary = `hsl(${hue}, ${sat}%, ${sL}%)`;
+	const accent = `hsl(${hue}, ${sat}%, ${aL}%)`;
 
 	colorobj = {
 		primary,
