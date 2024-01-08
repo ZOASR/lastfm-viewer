@@ -1,5 +1,5 @@
 import type { Image, Images, MBObject, Release, ReleaseInfo } from "./MBtypes";
-import type { TrackInfoRes, UserRecentTracksRes } from "./LFMtypes";
+import type { Track, TrackInfoRes, UserRecentTracksRes } from "./LFMtypes";
 import { version as APP_VERSION } from "./package.json";
 import { Colors, TrackInfo } from "./types";
 import { map, rgb2hsl, wait } from "./utils";
@@ -104,7 +104,7 @@ export const getLatestTrack = async (
 	let isNowplaying: boolean = false;
 	let imageUrl: string = "";
 	let duration: number = 0;
-	let pasttracks = undefined;
+	let pasttracks: Track[] | undefined = undefined;
 	let colors: Colors | undefined = undefined;
 	let userData: UserRecentTracksRes;
 	let trackInfo: TrackInfoRes;
