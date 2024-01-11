@@ -1,8 +1,8 @@
 {
 	"name": "@lastfm-viewer/tailwind-config",
-	"version": "0.0.0",
+	"version": "0.0.1",
 	"main": "index.ts",
-	"private": true,
+	"private": false,
 	"type": "module",
 	"types": "index.ts",
 	"dependencies": {
