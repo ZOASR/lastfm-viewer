@@ -1,6 +1,6 @@
 {
 	"name": "@lastfm-viewer/ui",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"private": false,
 	"main": "index.css",
 	"type": "module",
@@ -19,7 +19,8 @@
 		"@fontsource/inter": "^5.0.16",
 		"autoprefixer": "^10.4.16",
 		"postcss": "^8.4.32",
-		"tailwindcss": "^3.3.6"
+		"tailwindcss": "^3.3.6",
+		"daisyui": "^4.4.19"
 	},
 	"devDependencies": {
 		"@lastfm-viewer/tailwind-config": "workspace:*"
