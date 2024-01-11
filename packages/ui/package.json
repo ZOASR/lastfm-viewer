@@ -1,7 +1,7 @@
 {
 	"name": "@lastfm-viewer/ui",
-	"version": "0.0.0",
-	"private": true,
+	"version": "0.0.2",
+	"private": false,
 	"main": "index.css",
 	"type": "module",
 	"exports": {
@@ -15,11 +15,13 @@
 	"publishConfig": {
 		"access": "public"
 	},
-	"devDependencies": {
+	"dependencies": {
 		"@fontsource/inter": "^5.0.16",
-		"@lastfm-viewer/tailwind-config": "workspace:*",
 		"autoprefixer": "^10.4.16",
 		"postcss": "^8.4.32",
 		"tailwindcss": "^3.3.6"
+	},
+	"devDependencies": {
+		"@lastfm-viewer/tailwind-config": "workspace:*"
 	}
 }

@@ -1,7 +1,7 @@
 {
 	"name": "@lastfm-viewer/utils",
-	"version": "1.0.0",
-	"private": true,
+	"version": "0.0.2",
+	"private": false,
 	"main": "lastfm.ts",
 	"types": "./types.d.ts",
 	"exports": {
