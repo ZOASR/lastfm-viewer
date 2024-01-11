@@ -14,7 +14,7 @@
 	"publishConfig": {
 		"access": "public"
 	},
-	"devDependencies": {
+	"dependencies": {
 		"color.js": "^1.2.0"
 	}
 }
