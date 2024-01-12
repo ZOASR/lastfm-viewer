@@ -1,5 +1,11 @@
 # @lastfm-viewer/ui
 
+## 0.0.5
+
+### Patch Changes
+
+-   30f5f90: added init bin file
+
 ## 0.0.4
 
 ### Patch Changes
