@@ -1,9 +1,6 @@
 [submodule "apps/lastfm-viewer-react"]
 	path = apps/lastfm-viewer-react
 	url = https://github.com/ZOASR/lastfm-viewer-react
-[submodule "apps/lastfm-viewer-solid"]
-	path = apps/lastfm-viewer-solid
-	url = https://github.com/ZOASR/lastfm-viewer-solid
 [submodule "apps/lastfm-viewer-svelte"]
 	path = apps/lastfm-viewer-svelte
 	url = https://github.com/ZOASR/lastfm-viewer-svelte
