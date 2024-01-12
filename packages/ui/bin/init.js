@@ -13,6 +13,7 @@ const postcssConfigContent = `module.exports = {
 const tailwindConfigContent = `/** @type {import('tailwindcss').Config} */
 import tailwindConfig from "@lastfm-viewer/tailwind-config";
 export default {
+	content: ['./src/**/*.{html,js,svelte,ts}'],
 	presets: [tailwindConfig]
 };`;
 fs.writeFileSync("./postcss.config.js", postcssConfigContent);
