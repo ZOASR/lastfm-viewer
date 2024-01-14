@@ -6,8 +6,9 @@ export default {
 	},
 	plugins: [require("daisyui")],
 	daisyui: {
-		themes: ["dark"],
-		themeRoot: '[data-theme="dark"]'
+		themes: false,
+		base: false,
+		themeRoot: '[data-lfmv="dark"]'
 	},
 	corePlugins: {
 		preflight: false

@@ -11,7 +11,7 @@
 		"./TrackProgressBar.module.css": "./TrackProgressBar.module.css",
 		"./ErrorView.module.css": "./ErrorView.module.css",
 		"./CardFooter.module.css": "./CardFooter.module.css",
-		"./tailwind.config": "./tailwind.config.js"
+		"./tailwind.config": "./tailwind.config.ts"
 	},
 	"bin": {
 		"init": "./bin/init.js"
