@@ -5,6 +5,7 @@
     }
   ],
   "conventionalCommits.scopes": [
-    "style"
+    "style",
+    "package"
   ]
 }
