@@ -1,5 +1,11 @@
 # @lastfm-viewer/tailwind-config
 
+## 0.0.4
+
+### Patch Changes
+
+- 14c2181: tailwind config improvements
+
 ## 0.0.3
 
 ### Patch Changes
