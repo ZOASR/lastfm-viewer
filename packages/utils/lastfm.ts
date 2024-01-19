@@ -175,7 +175,7 @@ export const getLatestTrack = async (
 			duration: duration
 		};
 		if (releases) {
-			for (let release of releases) {
+			for (const release of releases) {
 				const rleaseInfo: ReleaseInfo = await getMBReleaseInfo(
 					release.id
 				);
@@ -185,6 +185,7 @@ export const getLatestTrack = async (
 					rleaseInfo["cover-art-archive"].back
 				) {
 					const images: Image[] = await getCAACoverArt(release.id);
+					if (!images[0].thumbnails[250]) continue;
 					imageUrl = images[0].thumbnails[250];
 					colors = await getColors(imageUrl);
 					LatestTrack = {

@@ -16,9 +16,9 @@ export type Image = {
 };
 
 export type Thumbnails = {
-	"250": string;
-	"500": string;
-	"1200": string;
+	"250"?: string;
+	"500"?: string;
+	"1200"?: string;
 	large: string;
 	small: string;
 };
