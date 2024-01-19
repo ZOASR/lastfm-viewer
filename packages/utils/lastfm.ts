@@ -6,7 +6,7 @@ import { map, rgb2hsl, wait } from "./utils";
 
 import { average } from "color.js";
 
-const lastfm_api_root = "http://ws.audioscrobbler.com/2.0/";
+const lastfm_api_root = "https://ws.audioscrobbler.com/2.0/";
 
 const getMBTrackReleases = async (
 	trackName: string,
