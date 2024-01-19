@@ -1,6 +1,6 @@
 {
 	"name": "@lastfm-viewer/utils",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"private": false,
 	"main": "lastfm.ts",
 	"types": "./types.d.ts",
