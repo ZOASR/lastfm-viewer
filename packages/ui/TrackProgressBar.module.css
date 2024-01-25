@@ -59,7 +59,7 @@
 }
 
 .bar {
-	@apply flex items-center gap-1 whitespace-nowrap;
+	@apply flex items-center gap-1 whitespace-nowrap text-[0.8em];
 
 	progress {
 		@apply mx-auto w-10/12;
