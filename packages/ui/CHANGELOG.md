@@ -1,5 +1,11 @@
 # @lastfm-viewer/ui
 
+## 0.0.10
+
+### Patch Changes
+
+- fb0d0fc: style: changed font sizing to adapt to any page styles
+
 ## 0.0.9
 
 ### Patch Changes
