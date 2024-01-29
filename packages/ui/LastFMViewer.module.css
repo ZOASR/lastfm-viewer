@@ -24,7 +24,7 @@
 }
 
 .lfmvCard {
-	font-family: "Inter";
+	font-family: "Inter Variable";
 	line-height: 1.5;
 	font-weight: 500;
 	font-size: 16px;
@@ -57,10 +57,10 @@
 	}
 
 	.trackTitle {
-		@apply mt-1 text-center text-3xl font-bold sm:mx-auto;
+		@apply mb-0 mt-1 text-center text-2xl font-bold sm:mx-auto;
 	}
 
 	.infoSpan {
-		@apply flex items-center justify-center gap-1 text-[0.75em] sm:text-[0.9em];
+		@apply flex items-center justify-center gap-1 text-[0.7em] sm:text-[0.8em];
 	}
 }

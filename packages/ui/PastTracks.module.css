@@ -29,7 +29,7 @@
 	}
 
 	&__trackTitle {
-		@apply flex-1 text-ellipsis text-start font-black transition-all duration-150 hover:underline;
+		@apply flex-1 text-ellipsis text-start font-bold transition-all duration-150 hover:underline;
 	}
 
 	.scrollable {
