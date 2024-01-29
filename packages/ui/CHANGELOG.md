@@ -1,5 +1,13 @@
 # @lastfm-viewer/ui
 
+## 0.0.11
+
+### Patch Changes
+
+- 8e618d7: Style Changes and cofig fixes
+- Updated dependencies [8e618d7]
+  - @lastfm-viewer/tailwind-config@0.0.5
+
 ## 0.0.10
 
 ### Patch Changes

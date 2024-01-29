@@ -1,6 +1,6 @@
 {
 	"name": "@lastfm-viewer/tailwind-config",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"main": "index.js",
 	"private": false,
 	"type": "module",
