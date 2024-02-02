@@ -2,10 +2,8 @@
 
 ## Homepage: [lastfm-viewer.vercel.app](lastfm-viewer.vercel.app)
 
-<p align="center" >
-</p>
-<p align="center" >
-  <img  style="filter: drop-shadow(0 0 10px black);" src="./public/lfmv_logo.svg" width="100%" height="100" />
+<p  align="center" >
+  <img  style="filter: drop-shadow(0 0 10px black);" src="https://raw.githubusercontent.com/ZOASR/lfmv-logo/main/lfmv-logo.svg" width="auto" height="300" />
 </p>
 
 lastfm-viewer is a collection of ui web components to view recent scrobbles for a [last.fm](last.fm) user, built for: `react` `solidjs` `svelte`
