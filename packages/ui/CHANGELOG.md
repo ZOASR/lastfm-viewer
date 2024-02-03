@@ -1,5 +1,11 @@
 # @lastfm-viewer/ui
 
+## 0.0.12
+
+### Patch Changes
+
+- 6852642: Style changes
+
 ## 0.0.11
 
 ### Patch Changes
