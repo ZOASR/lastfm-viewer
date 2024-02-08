@@ -1,5 +1,11 @@
 # @lastfm-viewer/utils
 
+## 0.1.0
+
+### Minor Changes
+
+- 409caf4: style adjustments and better error handling
+
 ## 0.0.4
 
 ### Patch Changes
