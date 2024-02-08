@@ -9,8 +9,8 @@ export const wait = async (secs: number) =>
 
 export function rgb2hsl(r: number, g: number, b: number) {
 	(r = r / 255), (g = g / 255), (b = b / 255);
-	let max = Math.max(r, g, b);
-	let min = Math.min(r, g, b);
+	const max = Math.max(r, g, b);
+	const min = Math.min(r, g, b);
 	let lum = (max + min) / 2;
 	let hue: number = 0;
 	let sat: number = 0;
