@@ -1,6 +1,6 @@
 {
 	"name": "@lastfm-viewer/ui",
-	"version": "0.0.12",
+	"version": "0.1.0",
 	"private": false,
 	"main": "index.css",
 	"type": "module",
