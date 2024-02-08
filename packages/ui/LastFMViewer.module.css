@@ -54,7 +54,7 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	-webkit-text-size-adjust: 100%;
-	@apply glass relative mx-auto box-border flex h-full w-full flex-col overflow-y-auto rounded-lg p-4 shadow-xl ring-2 ring-slate-950/5;
+	@apply glass relative mx-auto box-border flex h-full w-full flex-col justify-between overflow-y-auto rounded-lg p-4 shadow-xl ring-2 ring-slate-950/5;
 
 	figure {
 		@apply mx-auto mb-2 h-auto w-1/2 overflow-hidden rounded-lg border-inherit;
@@ -73,11 +73,12 @@
 	}
 
 	.trackTitle {
-		font-size: clamp(1rem, 2vmin, 1.5rem);
+		font-size: clamp(1rem, 3vmin, 1.5rem);
 		@apply mb-0 mt-1 text-center  font-black sm:mx-auto;
 	}
 
 	.infoSpan {
-		@apply flex items-center justify-center gap-1 text-[0.7em] sm:text-[0.8em];
+		font-size: clamp(0.6rem, 2vmin, 1rem);
+		@apply flex items-center justify-center gap-1;
 	}
 }
