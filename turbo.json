@@ -2,8 +2,15 @@
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "build": {
+      "cache": true,
       "dependsOn": [
         "^build"
+      ],
+      "inputs": [
+        "/src/**",
+        "/*.md",
+        "../../packages/**",
+        "!../../packages/**/CHANGELOG.md"
       ],
       "outputs": [
         "dist/**"
@@ -15,7 +22,11 @@
       "cache": false,
       "persistent": true
     },
-    "changelog": {},
+    "changelog": {
+      "dependsOn": [
+        "^build"
+      ]
+    },
     "customPublish": {}
   }
 }
