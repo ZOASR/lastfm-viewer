@@ -4,7 +4,13 @@
   "version": "1.0.0",
   "scripts": {
     "build": "turbo build",
+    "build:svelte": "turbo build --filter=@lastfm-viewer/svelte",
+    "build:solid": "turbo build --filter=@lastfm-viewer/solid",
+    "build:react": "turbo build --filter=@lastfm-viewer/react",
     "dev": "turbo dev",
+    "dev:svelte": "turbo dev --filter=@lastfm-viewer/svelte",
+    "dev:solid": "turbo dev --filter=@lastfm-viewer/solid",
+    "dev:react": "turbo dev --filter=@lastfm-viewer/react",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "update": "turbo update",
