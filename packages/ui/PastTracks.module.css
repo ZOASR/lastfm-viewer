@@ -1,4 +1,8 @@
 .scrollable {
+	scrollbar-width: thin;
+	scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
+	scrollbar-gutter: stable;
+
 	&::-webkit-scrollbar {
 		width: 1px;
 		height: 2px;
@@ -33,7 +37,7 @@
 	}
 
 	.scrollable {
-		@apply flex w-full items-center justify-between gap-4 overflow-x-scroll whitespace-nowrap;
+		@apply flex w-full items-center justify-between gap-4 overflow-x-auto whitespace-nowrap;
 
 		&__artist {
 			@apply flex flex-1 items-center justify-start gap-1;

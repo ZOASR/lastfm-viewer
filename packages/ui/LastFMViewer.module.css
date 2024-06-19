@@ -29,7 +29,20 @@
 	font-weight: 500;
 	font-size: 16px;
 
+	scrollbar-width: thin;
+	scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
+	scrollbar-gutter: stable;
+
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-text-size-adjust: 100%;
+
 	& * {
+		scrollbar-width: thin;
+		scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
+		scrollbar-gutter: stable;
 		box-sizing: border-box;
 	}
 	&::-webkit-scrollbar {
@@ -38,6 +51,7 @@
 	}
 	&::-webkit-scrollbar-track {
 		background: transparent;
+		background: none;
 		width: 1px;
 		height: 2px;
 	}
@@ -49,11 +63,6 @@
 		border-radius: 5px;
 	}
 
-	font-synthesis: none;
-	text-rendering: optimizeLegibility;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	-webkit-text-size-adjust: 100%;
 	@apply glass relative mx-auto box-border flex h-full w-full flex-col justify-between overflow-y-auto rounded-lg p-4 shadow-xl ring-2 ring-slate-950/5;
 
 	figure {
@@ -74,7 +83,7 @@
 
 	.trackTitle {
 		font-size: clamp(1rem, 3vmin, 1.5rem);
-		@apply mb-0 mt-1 text-center  font-black sm:mx-auto;
+		@apply mb-0 mt-1 text-center font-black sm:mx-auto;
 	}
 
 	.infoSpan {
