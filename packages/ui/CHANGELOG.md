@@ -1,5 +1,11 @@
 # @lastfm-viewer/ui
 
+## 0.1.2
+
+### Patch Changes
+
+-   2d3ddc8: style: fixed wrong overflow styling in song cover image
+
 ## 0.1.1
 
 ### Patch Changes
