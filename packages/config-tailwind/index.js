@@ -5,7 +5,11 @@ export default {
 		"**/components/**/*.svelte"
 	],
 	theme: {
-		extend: {}
+		extend: {
+			animation: {
+				"spin-slow": "spin 3s linear infinite"
+			}
+		}
 	},
 	plugins: [require("daisyui")],
 	daisyui: {
