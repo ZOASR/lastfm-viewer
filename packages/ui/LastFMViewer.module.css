@@ -29,8 +29,8 @@
 	font-weight: 500;
 	font-size: 16px;
 
-	scrollbar-width: thin;
-	scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
+	scrollbar-width: 0;
+	/* scrollbar-color: rgba(255, 255, 255, 0.5) transparent; */
 	scrollbar-gutter: stable;
 
 	font-synthesis: none;
@@ -40,30 +40,30 @@
 	-webkit-text-size-adjust: 100%;
 
 	& * {
-		scrollbar-width: thin;
-		scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
-		scrollbar-gutter: stable;
+		scrollbar-width: 0;
+		/* scrollbar-color: rgba(255, 255, 255, 0.5) transparent; */
+		/* scrollbar-gutter: stable; */
 		box-sizing: border-box;
 	}
 	&::-webkit-scrollbar {
-		width: 1px;
+		width: 0;
 		height: 2px;
 	}
 	&::-webkit-scrollbar-track {
 		background: transparent;
 		background: none;
-		width: 1px;
+		width: 0;
 		height: 2px;
 	}
 
 	&::-webkit-scrollbar-thumb {
 		background-color: rgba(255, 255, 255, 0.5);
-		width: 1px;
+		width: 0;
 		height: 2px;
 		border-radius: 5px;
 	}
 
-	@apply glass relative mx-auto box-border flex h-full w-full flex-col justify-between overflow-y-auto rounded-lg p-4 shadow-xl ring-2 ring-slate-950/5;
+	@apply glass relative mx-auto box-border flex h-full w-full flex-col justify-between overflow-y-auto rounded-lg !p-4 shadow-xl ring-2 ring-slate-950/5;
 
 	figure {
 		@apply mx-auto mb-2 h-auto w-1/2 overflow-clip rounded-lg border-inherit;
@@ -74,7 +74,7 @@
 	}
 
 	.cardBody {
-		@apply flex h-min flex-col gap-1 drop-shadow-lg filter;
+		@apply mt-4 flex h-min flex-col gap-1 drop-shadow-lg filter;
 	}
 
 	.titleSkeleton {
