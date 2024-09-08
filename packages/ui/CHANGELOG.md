@@ -1,5 +1,13 @@
 # @lastfm-viewer/ui
 
+## 0.1.3
+
+### Patch Changes
+
+-   cdc04fc: UI changes and minor fixes
+-   Updated dependencies [cdc04fc]
+    -   @lastfm-viewer/tailwind-config@0.0.6
+
 ## 0.1.2
 
 ### Patch Changes
