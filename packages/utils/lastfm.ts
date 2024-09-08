@@ -169,7 +169,7 @@ export const getLatestTrack = async (
 			artistName: artistName,
 			albumTitle: albumTitle,
 			imageUrl: undefined,
-			colors: undefined,
+			colors: await getColors(imageUrl),
 			nowplaying: isNowplaying,
 			pastTracks: pasttracks,
 			duration: duration
@@ -207,7 +207,7 @@ export const getLatestTrack = async (
 	return LatestTrack;
 };
 
-const getColors = async (imageUrl: string) => {
+const getColors = async (imageUrl: string | undefined) => {
 	let colorobj: {
 		primary: string;
 		secondary: string;
@@ -219,6 +219,7 @@ const getColors = async (imageUrl: string) => {
 		accent: "#888",
 		coverShadowColor: "#00000088"
 	};
+	if (!imageUrl) return colorobj;
 	const color = (await average(imageUrl, {
 		amount: 1,
 		sample: 50
