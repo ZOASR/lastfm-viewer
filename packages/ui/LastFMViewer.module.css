@@ -24,6 +24,18 @@
 }
 
 .lfmvCard {
+	--default-primary: #fff;
+	--default-secondary: #000;
+	--default-accent: #888;
+	--default-cover-shadow-color: #0008;
+
+	@media (prefers-color-scheme: dark) {
+		--default-primary: #000;
+		--default-secondary: #fff;
+		--default-accent: #888;
+		--default-cover-shadow-color: #fff8;
+	}
+
 	font-family: "Inter Variable";
 	line-height: 1.5;
 	font-weight: 500;
