@@ -214,10 +214,10 @@ const getColors = async (imageUrl: string | undefined) => {
 		accent: string;
 		coverShadowColor: string;
 	} = {
-		primary: "#fff",
-		secondary: "#000",
-		accent: "#888",
-		coverShadowColor: "#00000088"
+		primary: "var(--default-primary)",
+		secondary: "var(--default-secondary)",
+		accent: "var(--default-accent)",
+		coverShadowColor: "var(--default-cover-shadow-color)"
 	};
 	if (!imageUrl) return colorobj;
 	const color = (await average(imageUrl, {
