@@ -22,5 +22,9 @@
 	"dependencies": {
 		"@fontsource-variable/inter": "^5.0.16",
 		"@lastfm-viewer/tailwind-config": "workspace:*"
+	},
+	"devDependencies": {
+		"postcss-nested": "^7.0.2",
+		"postcss-scope": "^1.7.4"
 	}
 }
