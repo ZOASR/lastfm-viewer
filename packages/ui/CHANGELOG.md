@@ -1,5 +1,13 @@
 # @lastfm-viewer/ui
 
+## 0.2.1
+
+### Patch Changes
+
+- bb425d0: hotfix for applying content in tailwind
+- Updated dependencies [bb425d0]
+    - @lastfm-viewer/tailwind-config@0.0.8
+
 ## 0.2.0
 
 ### Minor Changes
