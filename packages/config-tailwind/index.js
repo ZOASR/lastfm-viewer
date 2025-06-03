@@ -1,9 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-	content: [
-		"./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}",
-		"**/components/**/*.svelte"
-	],
+	content: {
+		relative: true,
+		files: [
+			"../../apps/*/src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}",
+			"../../apps/*/src/**/components/**/*.svelte"
+		]
+	},
 	theme: {
 		extend: {
 			animation: {
