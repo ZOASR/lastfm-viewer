@@ -1,12 +1,14 @@
-.lfmvCard a {
+/* postcss-scope:ignore-file */
+
+.lfmvCard[data-lfmv] a {
 	color: inherit;
 	text-decoration: inherit;
 }
 
-.lfmvCard,
-.lfmvCard img,
-.lfmvCard figure,
-.lfmvCard div {
+.lfmvCard[data-lfmv],
+.lfmvCard[data-lfmv] img,
+.lfmvCard[data-lfmv] figure,
+.lfmvCard[data-lfmv] div {
 	animation: born-animate 0.5s ease-in-out alternate;
 }
 
@@ -23,7 +25,7 @@
 	}
 }
 
-.lfmvCard {
+.lfmvCard[data-lfmv] {
 	--default-primary: #fff;
 	--default-secondary: #000;
 	--default-accent: #888;

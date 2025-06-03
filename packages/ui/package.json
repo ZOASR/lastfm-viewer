@@ -5,13 +5,23 @@
 	"main": "index.css",
 	"type": "module",
 	"exports": {
-		".": "./index.css",
-		"./PastTracks.module.css": "./PastTracks.module.css",
-		"./LastFMViewer.module.css": "./LastFMViewer.module.css",
-		"./TrackProgressBar.module.css": "./TrackProgressBar.module.css",
-		"./ErrorView.module.css": "./ErrorView.module.css",
-		"./CardFooter.module.css": "./CardFooter.module.css",
+		".": "./styles/index.css",
+		"./PastTracks.css": "./styles/PastTracks.css",
+		"./LastFMViewer.css": "./styles/LastFMViewer.css",
+		"./TrackProgressBar.css": "./styles/TrackProgressBar.css",
+		"./ErrorView.css": "./styles/ErrorView.css",
+		"./CardFooter.css": "./styles/CardFooter.css",
+		"./styles": "./dist/index.css",
+		"./styles/PastTracks.css": "./dist/PastTracks.css",
+		"./styles/LastFMViewer.css": "./dist/LastFMViewer.css",
+		"./styles/TrackProgressBar.css": "./dist/TrackProgressBar.css",
+		"./styles/ErrorView.css": "./dist/ErrorView.css",
+		"./styles/CardFooter.css": "./dist/CardFooter.css",
 		"./tailwind.config": "./tailwind.config.ts"
+	},
+	"scripts": {
+		"build": "postcss ./styles/*.css --dir ./dist --config ./postcss.config.js ",
+		"dev": "postcss ./styles/*.css --dir ./dist --config ./postcss.config.js --watch"
 	},
 	"bin": {
 		"init": "./bin/init.js"
@@ -24,6 +34,7 @@
 		"@lastfm-viewer/tailwind-config": "workspace:*"
 	},
 	"devDependencies": {
+		"postcss-cli": "^11.0.1",
 		"postcss-nested": "^7.0.2",
 		"postcss-scope": "^1.7.4"
 	}
