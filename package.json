@@ -12,6 +12,7 @@
     "dev:svelte": "turbo dev --filter=@lastfm-viewer/svelte...",
     "dev:solid": "turbo dev --filter=@lastfm-viewer/solid...",
     "dev:react": "turbo dev --filter=@lastfm-viewer/react...",
+    "dev:ui": "turbo dev --filter=@lastfm-viewer/ui",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "update": "turbo update",
