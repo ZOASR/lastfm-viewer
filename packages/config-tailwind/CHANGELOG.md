@@ -1,5 +1,11 @@
 # @lastfm-viewer/tailwind-config
 
+## 0.0.8
+
+### Patch Changes
+
+- bb425d0: hotfix for applying content in tailwind
+
 ## 0.0.7
 
 ### Patch Changes
