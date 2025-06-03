@@ -15,7 +15,7 @@ export default {
 	daisyui: {
 		themes: false,
 		base: false,
-		themeRoot: '[data-lfmv="dark"]'
+		themeRoot: "[data-lfmv]"
 	},
 	corePlugins: {
 		preflight: false

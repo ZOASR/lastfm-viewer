@@ -1,4 +1,7 @@
-@import url('@fontsource-variable/inter');
-@tailwind base;
+@import url("@fontsource-variable/inter");
+
+[data-lfmv] {
+	@tailwind base;
+}
 @tailwind components;
 @tailwind utilities;
