@@ -1,5 +1,11 @@
 # @lastfm-viewer/ui
 
+## 0.2.0
+
+### Minor Changes
+
+- ca30ff3: Restructured files for css scoping
+
 ## 0.1.4
 
 ### Patch Changes
