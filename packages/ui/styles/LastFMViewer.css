@@ -9,10 +9,10 @@
 .lfmvCard[data-lfmv] img,
 .lfmvCard[data-lfmv] figure,
 .lfmvCard[data-lfmv] div {
-	animation: born-animate 0.5s ease-in-out alternate;
+	animation: __lfmv-born-animate 0.5s ease-in-out alternate;
 }
 
-@keyframes born-animate {
+@keyframes __lfmv-born-animate {
 	from {
 		scale: 0.98;
 		opacity: 0.2;
