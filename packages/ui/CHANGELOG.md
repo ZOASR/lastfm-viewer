@@ -1,5 +1,11 @@
 # @lastfm-viewer/ui
 
+## 0.2.2
+
+### Patch Changes
+
+- fe7beb2: fix(ui): added identifier for animations to avoid clashing with tailwind animations
+
 ## 0.2.1
 
 ### Patch Changes
