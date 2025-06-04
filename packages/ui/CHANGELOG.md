@@ -1,5 +1,11 @@
 # @lastfm-viewer/ui
 
+## 0.2.3
+
+### Patch Changes
+
+- dev(fix): changed export names in ui package
+
 ## 0.2.2
 
 ### Patch Changes

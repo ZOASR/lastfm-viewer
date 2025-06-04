@@ -1,6 +1,6 @@
 {
 	"name": "@lastfm-viewer/ui",
-	"version": "0.2.2",
+	"version": "0.2.3",
 	"private": false,
 	"main": "index.css",
 	"type": "module",
@@ -20,8 +20,8 @@
 		"./tailwind.config": "./tailwind.config.ts"
 	},
 	"scripts": {
-		"build": "postcss ./styles/*.css --dir ./dist --config ./postcss.config.js ",
-		"dev": "postcss ./styles/*.css --dir ./dist --config ./postcss.config.js --watch"
+		"build": "postcss ./src/*.css --dir ./dist --config ./postcss.config.js ",
+		"dev": "postcss ./src/*.css --dir ./dist --config ./postcss.config.js --watch"
 	},
 	"bin": {
 		"init": "./bin/init.js"
