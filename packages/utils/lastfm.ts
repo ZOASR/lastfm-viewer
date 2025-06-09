@@ -1,50 +1,93 @@
-import type { Image, Images, MBObject, Release, ReleaseInfo } from "./MBtypes";
-import type { Track, TrackInfoRes, UserRecentTracksRes } from "./LFMtypes";
-import { version as APP_VERSION } from "./package.json";
+import type { Image, Release, ReleaseInfo } from "./MBtypes";
+import type { TrackInfoRes, UserRecentTracksRes } from "./LFMtypes";
 import { Colors, TrackInfo } from "./types";
 import { map, rgb2hsl, wait } from "./utils";
 
 import { average } from "color.js";
 
-const lastfm_api_root = "https://ws.audioscrobbler.com/2.0/";
+// Custom error classes for better error handling
+export class LastFMError extends Error {
+	constructor(message: string, public readonly code?: string) {
+		super(message);
+		this.name = 'LastFMError';
+	}
+}
+
+export class MusicBrainzError extends Error {
+	constructor(message: string, public readonly code?: string) {
+		super(message);
+		this.name = 'MusicBrainzError';
+	}
+}
+
+export class CoverArtError extends Error {
+	constructor(message: string, public readonly code?: string) {
+		super(message);
+		this.name = 'CoverArtError';
+	}
+}
+
+export class APIError extends Error {
+	constructor(
+		message: string,
+		public readonly status: number,
+		public readonly code?: string
+	) {
+		super(message);
+		this.name = 'APIError';
+	}
+}
+
+// Helper function to handle API responses
+async function handleAPIResponse<T>(response: Response): Promise<T> {
+	if (!response.ok) {
+		const error = await response.json() as { error: string };
+		throw new APIError(error.error, response.status);
+	}
+	return response.json();
+}
+
+const API_ROOT = "https://lastfm-viewer-api.cloudflare-untying955.workers.dev/api/lastfm";
 
 const getMBTrackReleases = async (
 	trackName: string,
-	trackArtirst: string,
-	albumName: string | undefined
+	trackArtist: string,
+	albumName?: string
 ): Promise<Release[] | null> => {
-	let brainzUrl: string;
-	if (albumName) {
-		brainzUrl = `https://musicbrainz.org/ws/2/recording/?query=recording:"${trackName}"+AND+album:${albumName}+AND++artist:"${trackArtirst}"+AND+status:official+AND+primarytype:album&inc=releases&fmt=json&limit=1`;
-	} else {
-		brainzUrl = `https://musicbrainz.org/ws/2/recording/?query=recording:"${trackName}"+AND+artist:"${trackArtirst}"+AND+status:official+AND+primarytype:album&inc=releases&fmt=json&limit=1`;
-	}
-	const musicbrainzApi = await fetch(brainzUrl, {
-		headers: {
-			"User-Agent": `LastFMViewer/${APP_VERSION} `
+	try {
+		const url = `${API_ROOT}/mb-releases?track=${encodeURIComponent(trackName)}&artist=${encodeURIComponent(trackArtist)}${albumName ? `&album=${encodeURIComponent(albumName)}` : ''}`;
+		const res = await fetch(url);
+		return await handleAPIResponse<Release[] | null>(res);
+	} catch (error) {
+		if (error instanceof APIError) {
+			throw new MusicBrainzError(error.message, error.code);
 		}
-	});
-	const brainzData: MBObject = await musicbrainzApi.json();
-	if (brainzData.recordings) return brainzData.recordings[0]?.releases;
-	else return null;
+		throw new MusicBrainzError('Failed to fetch MusicBrainz releases', 'MB_FETCH_ERROR');
+	}
 };
 
 const getMBReleaseInfo = async (mbid: string): Promise<ReleaseInfo> => {
-	const brainzUrl = `https://musicbrainz.org/ws/2/release/${mbid}?fmt=json`;
-	const musicbrainzApi = await fetch(brainzUrl, {
-		headers: {
-			"User-Agent": `LastFMViewer/${APP_VERSION} `
+	try {
+		const res = await fetch(`${API_ROOT}/mb-release/${mbid}`);
+		return await handleAPIResponse<ReleaseInfo>(res);
+	} catch (error) {
+		if (error instanceof APIError) {
+			throw new MusicBrainzError(error.message, error.code);
 		}
-	});
-	const releaseInfo: ReleaseInfo = await musicbrainzApi.json();
-	return releaseInfo;
+		throw new MusicBrainzError('Failed to fetch MusicBrainz release info', 'MB_INFO_ERROR');
+	}
 };
 
 const getCAACoverArt = async (releaseMBid: string): Promise<Image[]> => {
-	const coverArtUrl = `https://coverartarchive.org/release/${releaseMBid}`;
-	const cover = await fetch(coverArtUrl);
-	const covers: Images = await cover.json();
-	return covers.images;
+	try {
+		const res = await fetch(`${API_ROOT}/cover-art/${releaseMBid}`);
+		return await handleAPIResponse<Image[]>(res);
+	} catch (error) {
+		if (error instanceof APIError) {
+			throw new CoverArtError(error.message, error.code);
+		}
+		throw new CoverArtError('Failed to fetch cover art', 'COVER_ART_ERROR');
+	}
 };
 
 const getUserTracks = async (
@@ -52,20 +95,14 @@ const getUserTracks = async (
 	api_key: string,
 	limit: number = 5
 ): Promise<UserRecentTracksRes> => {
-	const lastfm_api_url = `${lastfm_api_root}?method=user.getrecenttracks&user=${username}&api_key=${api_key}&format=json&limit=${limit}`;
-
-	const res = await fetch(lastfm_api_url, {
-		method: "GET",
-		headers: {
-			"User-Agent": `LastFMViewer/${APP_VERSION} `
+	try {
+		const res = await fetch(`${API_ROOT}/user-tracks/${username}?limit=${limit}`);
+		return await handleAPIResponse<UserRecentTracksRes>(res);
+	} catch (error) {
+		if (error instanceof APIError) {
+			throw new LastFMError(error.message, error.code);
 		}
-	});
-	if (res.ok) {
-		const data: UserRecentTracksRes = await res.json();
-		return data;
-	} else {
-		const error: { message: string; error: number } = await res.json();
-		throw new Error(error.message);
+		throw new LastFMError('Failed to fetch user tracks', 'USER_TRACKS_ERROR');
 	}
 };
 
@@ -74,23 +111,23 @@ const getTrackInfo = async (
 	track_artist: string,
 	api_key: string
 ): Promise<TrackInfoRes> => {
-	const lastfm_api_url = `${lastfm_api_root}?method=track.getInfo&track=${track_name}&artist=${track_artist}&api_key=${api_key}&format=json`;
+	try {
+		const url = `${API_ROOT}/track-info?track=${encodeURIComponent(track_name)}&artist=${encodeURIComponent(track_artist)}`;
+		const res = await fetch(url);
+		const data = await handleAPIResponse<TrackInfoRes>(res);
 
-	const res = await fetch(lastfm_api_url, {
-		method: "GET",
-		headers: {
-			"User-Agent": `LastFMViewer/${APP_VERSION} `
-		}
-	});
-	const data: TrackInfoRes = await res.json();
-	if (res.ok) {
 		if (!(data.track.album && data.track.album.image[3]["#text"])) {
-			throw new Error("No lastfm album for this track");
+			throw new LastFMError('No Last.fm album for this track', 'NO_ALBUM_ERROR');
 		}
 		return data;
-	} else {
-		const error: { message: string; error: number } = await res.json();
-		throw new Error(error.message);
+	} catch (error) {
+		if (error instanceof LastFMError) {
+			throw error;
+		}
+		if (error instanceof APIError) {
+			throw new LastFMError(error.message, error.code);
+		}
+		throw new LastFMError('Failed to fetch track info', 'TRACK_INFO_ERROR');
 	}
 };
 
@@ -98,122 +135,125 @@ export const getLatestTrack = async (
 	username: string,
 	api_key: string
 ): Promise<TrackInfo | Error> => {
-	let trackName: string = "";
-	let artistName: string = "";
-	let albumTitle: string | undefined = undefined;
-	let isNowplaying: boolean = false;
-	let imageUrl: string = "";
-	let duration: number = 0;
-	let pasttracks: Track[] | undefined = undefined;
-	let colors: Colors | undefined = undefined;
-	let userData: UserRecentTracksRes;
-	let trackInfo: TrackInfoRes;
-
 	try {
-		userData = await getUserTracks(username, api_key, 5);
+		// Get user's recent tracks
+		const userData = await getUserTracks(username, api_key, 5);
+		const currentTrack = userData.recenttracks.track[0];
 
-		trackName = userData.recenttracks.track[0].name;
-		artistName = userData.recenttracks.track[0].artist["#text"];
-		pasttracks = userData.recenttracks.track;
+		// Extract basic track info
+		const trackName = currentTrack.name;
+		const artistName = currentTrack.artist["#text"];
+		const isNowplaying = "@attr" in currentTrack && currentTrack["@attr"]?.nowplaying === "true";
+		const pastTracks = userData.recenttracks.track;
 
-		if ("@attr" in userData.recenttracks.track[0])
-			isNowplaying =
-				userData.recenttracks.track[0]["@attr"]?.nowplaying == "true";
-		else isNowplaying = false;
-	} catch (error) {
-		if (error instanceof Error) {
-			return error;
-		}
-	}
+		// Try to get detailed track info from LastFM first
+		try {
+			const trackInfo = await getTrackInfo(trackName, artistName, api_key);
+			const albumTitle = trackInfo.track.album?.title;
+			const duration = parseInt(trackInfo.track.duration);
+			const imageUrl = trackInfo.track.album?.image[3]["#text"];
+			const colors = await getColors(imageUrl);
 
-	let LatestTrack: TrackInfo = {
-		trackName: undefined,
-		artistName: undefined,
-		albumTitle: undefined,
-		imageUrl: undefined,
-		colors: undefined,
-		nowplaying: false,
-		pastTracks: [],
-		duration: 0
-	};
+			const trackInfoObj: TrackInfo = {
+				trackName,
+				artistName,
+				albumTitle,
+				imageUrl,
+				colors,
+				nowplaying: isNowplaying,
+				pastTracks,
+				duration
+			};
+		} catch (error) {
+			if (error instanceof LastFMError && error.code === 'NO_ALBUM_ERROR') {
+				console.warn('LastFM track info fetch failed:', error.message);
+			} else {
+				console.error('LastFM track info fetch failed:', error);
+			}
 
-	try {
-		trackInfo = await getTrackInfo(trackName, artistName, api_key);
-		albumTitle = trackInfo.track.album?.title;
-		duration = parseInt(trackInfo.track.duration);
-		imageUrl = trackInfo.track.album?.image[3]["#text"];
-		colors = await getColors(imageUrl);
-		LatestTrack = {
-			trackName: trackName,
-			artistName: artistName,
-			albumTitle: albumTitle,
-			imageUrl: imageUrl,
-			colors: colors,
-			nowplaying: isNowplaying,
-			pastTracks: pasttracks,
-			duration: duration
-		};
-	} catch (error) {
-		if (error instanceof Error) {
-			console.error(error);
-		}
-
-		const releases: Release[] | null = await getMBTrackReleases(
-			trackName,
-			artistName,
-			albumTitle
-		);
-
-		LatestTrack = {
-			trackName: trackName,
-			artistName: artistName,
-			albumTitle: albumTitle,
-			imageUrl: undefined,
-			colors: await getColors(imageUrl),
-			nowplaying: isNowplaying,
-			pastTracks: pasttracks,
-			duration: duration
-		};
-		if (releases) {
-			for (const release of releases) {
-				const rleaseInfo: ReleaseInfo = await getMBReleaseInfo(
-					release.id
-				);
-				if (
-					rleaseInfo["cover-art-archive"].front ||
-					rleaseInfo["cover-art-archive"].artwork ||
-					rleaseInfo["cover-art-archive"].back
-				) {
-					const images: Image[] = await getCAACoverArt(release.id);
-					if (!images[0].thumbnails[250]) continue;
-					imageUrl = images[0].thumbnails[250];
-					colors = await getColors(imageUrl);
-					LatestTrack = {
-						trackName: trackName,
-						artistName: artistName,
-						albumTitle: release.title,
-						imageUrl: imageUrl,
-						colors: colors,
+			// Fallback to MusicBrainz if LastFM fails
+			try {
+				const releases = await getMBTrackReleases(trackName, artistName);
+				if (!releases) {
+					const trackInfoObj: TrackInfo = {
+						trackName,
+						artistName,
+						albumTitle: undefined,
+						imageUrl: undefined,
+						colors: await getColors(undefined),
 						nowplaying: isNowplaying,
-						pastTracks: pasttracks,
-						duration: duration
+						pastTracks,
+						duration: 0
 					};
-					return LatestTrack;
 				}
-				await wait(1000);
+
+				// Try each release until we find one with cover art
+				for (const release of releases) {
+					try {
+						const releaseInfo = await getMBReleaseInfo(release.id);
+						const hasCoverArt = releaseInfo["cover-art-archive"].front ||
+							releaseInfo["cover-art-archive"].artwork ||
+							releaseInfo["cover-art-archive"].back;
+
+						if (hasCoverArt) {
+							const images = await getCAACoverArt(release.id);
+							if (!images[0]?.thumbnails[250]) continue;
+
+							const imageUrl = images[0].thumbnails[250];
+							const colors = await getColors(imageUrl);
+
+							const trackInfoObj: TrackInfo = {
+								trackName,
+								artistName,
+								albumTitle: release.title,
+								imageUrl,
+								colors,
+								nowplaying: isNowplaying,
+								pastTracks,
+								duration: 0
+							};
+						}
+					} catch (error) {
+						console.warn(`Failed to fetch cover art for release ${release.id}:`, error);
+						continue;
+					}
+					await wait(1000); // Rate limiting
+				}
+
+				// Return basic info if no cover art found
+				const trackInfoObj: TrackInfo = {
+					trackName,
+					artistName,
+					albumTitle: undefined,
+					imageUrl: undefined,
+					colors: await getColors(undefined),
+					nowplaying: isNowplaying,
+					pastTracks,
+					duration: 0
+				};
+			} catch (error) {
+				console.error('MusicBrainz fallback failed:', error);
+				// Return basic info if MusicBrainz fallback fails
+				const trackInfoObj: TrackInfo = {
+					trackName,
+					artistName,
+					albumTitle: undefined,
+					imageUrl: undefined,
+					colors: await getColors(undefined),
+					nowplaying: isNowplaying,
+					pastTracks,
+					duration: 0
+				};
 			}
 		}
+	} catch (error) {
+		console.error('Failed to fetch latest track:', error);
+		return error instanceof Error ? error : new Error('Unknown error occurred');
 	}
-	return LatestTrack;
 };
 
 const getColors = async (imageUrl: string | undefined) => {
-	let colorobj: {
-		primary: string;
-		secondary: string;
-		accent: string;
-		coverShadowColor: string;
-	} = {
+	let colorobj: Colors = {
 		primary: "var(--default-primary)",
 		secondary: "var(--default-secondary)",
 		accent: "var(--default-accent)",
