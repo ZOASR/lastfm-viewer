@@ -1,5 +1,6 @@
 import { fromHono } from "chanfana";
 import { Hono } from "hono";
+import { cors } from 'hono/cors';
 import {
 	GetUserTracks,
 	GetTrackInfo,
@@ -10,6 +11,16 @@ import {
 
 // Start a Hono app
 const app = new Hono<{ Bindings: Env }>();
+
+// Apply CORS middleware
+app.use('*', cors({
+	origin: '*',
+	allowMethods: ['GET'],
+	allowHeaders: ['Content-Type', 'Authorization'],
+	exposeHeaders: ['Content-Length', 'X-Requested-With'],
+	maxAge: 86400, // 24 hours
+	credentials: false // Don't allow credentials for wildcard origin
+}));
 
 // Setup OpenAPI registry
 const openapi = fromHono(app, {
