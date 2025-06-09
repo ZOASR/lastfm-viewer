@@ -131,6 +131,11 @@ const getTrackInfo = async (
 	}
 };
 
+
+// this cache is used to store the track info for a user & track name pair
+// this is used to avoid duplicate calls to the API
+const cache = new Map<string, TrackInfo>();
+
 export const getLatestTrack = async (
 	username: string,
 	api_key: string
@@ -142,6 +147,8 @@ export const getLatestTrack = async (
 
 		// Extract basic track info
 		const trackName = currentTrack.name;
+		const cached = cache.get(`${username}-${trackName}`);
+		if (cached) return cached;
 		const artistName = currentTrack.artist["#text"];
 		const isNowplaying = "@attr" in currentTrack && currentTrack["@attr"]?.nowplaying === "true";
 		const pastTracks = userData.recenttracks.track;
@@ -164,6 +171,8 @@ export const getLatestTrack = async (
 				pastTracks,
 				duration
 			};
+			cache.set(`${username}-${trackName}`, trackInfoObj);
+			return trackInfoObj;
 		} catch (error) {
 			if (error instanceof LastFMError && error.code === 'NO_ALBUM_ERROR') {
 				console.warn('LastFM track info fetch failed:', error.message);
@@ -185,6 +194,8 @@ export const getLatestTrack = async (
 						pastTracks,
 						duration: 0
 					};
+					cache.set(`${username}-${trackName}`, trackInfoObj);
+					return trackInfoObj;
 				}
 
 				// Try each release until we find one with cover art
@@ -212,6 +223,8 @@ export const getLatestTrack = async (
 								pastTracks,
 								duration: 0
 							};
+							cache.set(`${username}-${trackName}`, trackInfoObj);
+							return trackInfoObj;
 						}
 					} catch (error) {
 						console.warn(`Failed to fetch cover art for release ${release.id}:`, error);
@@ -231,6 +244,8 @@ export const getLatestTrack = async (
 					pastTracks,
 					duration: 0
 				};
+				cache.set(`${username}-${trackName}`, trackInfoObj);
+				return trackInfoObj;
 			} catch (error) {
 				console.error('MusicBrainz fallback failed:', error);
 				// Return basic info if MusicBrainz fallback fails
@@ -244,6 +259,8 @@ export const getLatestTrack = async (
 					pastTracks,
 					duration: 0
 				};
+				cache.set(`${username}-${trackName}`, trackInfoObj);
+				return trackInfoObj;
 			}
 		}
 	} catch (error) {
