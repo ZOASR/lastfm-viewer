@@ -165,14 +165,14 @@ export class GetMBReleases extends OpenAPIRoute {
 				}
 			});
 			const brainzData = await musicbrainzApi.json() as MBObject;
-			if (brainzData.recordings) {
+			if (brainzData.recordings.length > 0) {
 				return c.json(brainzData.recordings[0]?.releases);
 			} else {
-				return c.json(null);
+				return c.json({ error: "No releases found" }, 400);
 			}
 		} catch (error) {
 			if (error instanceof Error) {
-				return c.json({ error: error.message }, 400);
+				return c.json({ error: "No releases found" }, 400);
 			}
 			return c.json({ error: "Unknown error occurred" }, 400);
 		}
