@@ -2,9 +2,10 @@
 	"name": "@lastfm-viewer/utils",
 	"version": "0.1.1",
 	"private": false,
-	"main": "lastfm.ts",
-	"types": "./types.d.ts",
+	"main": "index.ts",
+	"types": "index.ts",
 	"exports": {
+		".": "./index.ts",
 		"./lastfm": "./lastfm.ts",
 		"./MBtypes": "./MBtypes.ts",
 		"./LFMtypes": "./LFMtypes.ts",
