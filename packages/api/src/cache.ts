@@ -200,3 +200,45 @@ export async function cacheResponse(
 	}
 }
 
+// Rate limiting with cache integration
+export class RateLimiter {
+	private requests = new Map<string, { count: number; resetTime: number }>();
+	private readonly maxRequests: number;
+	private readonly windowMs: number;
+
+	constructor(maxRequests = 100, windowMs = 60000) {
+		this.maxRequests = maxRequests;
+		this.windowMs = windowMs;
+	}
+
+	check(identifier: string): { allowed: boolean; remaining: number; resetTime: number } {
+		const now = Date.now();
+		const key = identifier;
+		const record = this.requests.get(key);
+
+		if (!record || now > record.resetTime) {
+			// New window or expired
+			const resetTime = now + this.windowMs;
+			this.requests.set(key, { count: 1, resetTime });
+			return { allowed: true, remaining: this.maxRequests - 1, resetTime };
+		}
+
+		if (record.count >= this.maxRequests) {
+			return { allowed: false, remaining: 0, resetTime: record.resetTime };
+		}
+
+		record.count++;
+		return { allowed: true, remaining: this.maxRequests - record.count, resetTime: record.resetTime };
+	}
+
+	// Clean up expired entries
+	cleanup(): void {
+		const now = Date.now();
+		for (const [key, record] of this.requests.entries()) {
+			if (now > record.resetTime) {
+				this.requests.delete(key);
+			}
+		}
+	}
+}
+
