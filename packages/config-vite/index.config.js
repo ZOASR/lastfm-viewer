@@ -9,7 +9,12 @@ const viteConfig = {
 	},
 	build: {
 		sourcemap: true,
-		emptyOutDir: true
+		emptyOutDir: true,
+		rollupOptions: {
+			output: {
+				sourcemapExcludeSources: true
+			}
+		}
 	}
 };
 
