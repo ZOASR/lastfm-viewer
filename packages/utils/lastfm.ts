@@ -7,23 +7,32 @@ import { average } from "color.js";
 
 // Custom error classes for better error handling
 export class LastFMError extends Error {
-	constructor(message: string, public readonly code?: string) {
+	constructor(
+		message: string,
+		public readonly code?: string
+	) {
 		super(message);
-		this.name = 'LastFMError';
+		this.name = "LastFMError";
 	}
 }
 
 export class MusicBrainzError extends Error {
-	constructor(message: string, public readonly code?: string) {
+	constructor(
+		message: string,
+		public readonly code?: string
+	) {
 		super(message);
-		this.name = 'MusicBrainzError';
+		this.name = "MusicBrainzError";
 	}
 }
 
 export class CoverArtError extends Error {
-	constructor(message: string, public readonly code?: string) {
+	constructor(
+		message: string,
+		public readonly code?: string
+	) {
 		super(message);
-		this.name = 'CoverArtError';
+		this.name = "CoverArtError";
 	}
 }
 
@@ -34,20 +43,21 @@ export class APIError extends Error {
 		public readonly code?: string
 	) {
 		super(message);
-		this.name = 'APIError';
+		this.name = "APIError";
 	}
 }
 
 // Helper function to handle API responses
 async function handleAPIResponse<T>(response: Response): Promise<T> {
 	if (!response.ok) {
-		const error = await response.json() as { error: string };
+		const error = (await response.json()) as { error: string };
 		throw new APIError(error.error, response.status);
 	}
 	return response.json();
 }
 
-const API_ROOT = "https://lastfm-viewer-api.cloudflare-untying955.workers.dev/api/lastfm";
+const API_ROOT =
+	"https://lastfm-viewer-api.cloudflare-untying955.workers.dev/api/lastfm";
 
 const getMBTrackReleases = async (
 	trackName: string,
@@ -55,14 +65,17 @@ const getMBTrackReleases = async (
 	albumName?: string
 ): Promise<Release[] | null> => {
 	try {
-		const url = `${API_ROOT}/mb-releases?track=${encodeURIComponent(trackName)}&artist=${encodeURIComponent(trackArtist)}${albumName ? `&album=${encodeURIComponent(albumName)}` : ''}`;
+		const url = `${API_ROOT}/mb-releases?track=${encodeURIComponent(trackName)}&artist=${encodeURIComponent(trackArtist)}${albumName ? `&album=${encodeURIComponent(albumName)}` : ""}`;
 		const res = await fetch(url);
 		return await handleAPIResponse<Release[] | null>(res);
 	} catch (error) {
 		if (error instanceof APIError) {
 			throw new MusicBrainzError(error.message, error.code);
 		}
-		throw new MusicBrainzError('Failed to fetch MusicBrainz releases', 'MB_FETCH_ERROR');
+		throw new MusicBrainzError(
+			"Failed to fetch MusicBrainz releases",
+			"MB_FETCH_ERROR"
+		);
 	}
 };
 
@@ -74,7 +87,10 @@ const getMBReleaseInfo = async (mbid: string): Promise<ReleaseInfo> => {
 		if (error instanceof APIError) {
 			throw new MusicBrainzError(error.message, error.code);
 		}
-		throw new MusicBrainzError('Failed to fetch MusicBrainz release info', 'MB_INFO_ERROR');
+		throw new MusicBrainzError(
+			"Failed to fetch MusicBrainz release info",
+			"MB_INFO_ERROR"
+		);
 	}
 };
 
@@ -86,30 +102,33 @@ const getCAACoverArt = async (releaseMBid: string): Promise<Image[]> => {
 		if (error instanceof APIError) {
 			throw new CoverArtError(error.message, error.code);
 		}
-		throw new CoverArtError('Failed to fetch cover art', 'COVER_ART_ERROR');
+		throw new CoverArtError("Failed to fetch cover art", "COVER_ART_ERROR");
 	}
 };
 
 const getUserTracks = async (
 	username: string,
-	api_key: string,
 	limit: number = 5
 ): Promise<UserRecentTracksRes> => {
 	try {
-		const res = await fetch(`${API_ROOT}/user-tracks/${username}?limit=${limit}`);
+		const res = await fetch(
+			`${API_ROOT}/user-tracks/${username}?limit=${limit}`
+		);
 		return await handleAPIResponse<UserRecentTracksRes>(res);
 	} catch (error) {
 		if (error instanceof APIError) {
 			throw new LastFMError(error.message, error.code);
 		}
-		throw new LastFMError('Failed to fetch user tracks', 'USER_TRACKS_ERROR');
+		throw new LastFMError(
+			"Failed to fetch user tracks",
+			"USER_TRACKS_ERROR"
+		);
 	}
 };
 
 const getTrackInfo = async (
 	track_name: string,
-	track_artist: string,
-	api_key: string
+	track_artist: string
 ): Promise<TrackInfoRes> => {
 	try {
 		const url = `${API_ROOT}/track-info?track=${encodeURIComponent(track_name)}&artist=${encodeURIComponent(track_artist)}`;
@@ -117,7 +136,10 @@ const getTrackInfo = async (
 		const data = await handleAPIResponse<TrackInfoRes>(res);
 
 		if (!(data.track.album && data.track.album.image[3]["#text"])) {
-			throw new LastFMError('No Last.fm album for this track', 'NO_ALBUM_ERROR');
+			throw new LastFMError(
+				"No Last.fm album for this track",
+				"NO_ALBUM_ERROR"
+			);
 		}
 		return data;
 	} catch (error) {
@@ -127,22 +149,20 @@ const getTrackInfo = async (
 		if (error instanceof APIError) {
 			throw new LastFMError(error.message, error.code);
 		}
-		throw new LastFMError('Failed to fetch track info', 'TRACK_INFO_ERROR');
+		throw new LastFMError("Failed to fetch track info", "TRACK_INFO_ERROR");
 	}
 };
-
 
 // this cache is used to store the track info for a user & track name pair
 // this is used to avoid duplicate calls to the API
 const cache = new Map<string, TrackInfo>();
 
 export const getLatestTrack = async (
-	username: string,
-	api_key: string
+	username: string
 ): Promise<TrackInfo | Error> => {
 	try {
 		// Get user's recent tracks
-		const userData = await getUserTracks(username, api_key, 5);
+		const userData = await getUserTracks(username, 5);
 		const currentTrack = userData.recenttracks.track[0];
 
 		// Extract basic track info
@@ -150,12 +170,14 @@ export const getLatestTrack = async (
 		const cached = cache.get(`${username}-${trackName}`);
 		if (cached) return cached;
 		const artistName = currentTrack.artist["#text"];
-		const isNowplaying = "@attr" in currentTrack && currentTrack["@attr"]?.nowplaying === "true";
+		const isNowplaying =
+			"@attr" in currentTrack &&
+			currentTrack["@attr"]?.nowplaying === "true";
 		const pastTracks = userData.recenttracks.track;
 
 		// Try to get detailed track info from LastFM first
 		try {
-			const trackInfo = await getTrackInfo(trackName, artistName, api_key);
+			const trackInfo = await getTrackInfo(trackName, artistName);
 			const albumTitle = trackInfo.track.album?.title;
 			const duration = parseInt(trackInfo.track.duration);
 			const imageUrl = trackInfo.track.album?.image[3]["#text"];
@@ -174,15 +196,21 @@ export const getLatestTrack = async (
 			cache.set(`${username}-${trackName}`, trackInfoObj);
 			return trackInfoObj;
 		} catch (error) {
-			if (error instanceof LastFMError && error.code === 'NO_ALBUM_ERROR') {
-				console.warn('LastFM track info fetch failed:', error.message);
+			if (
+				error instanceof LastFMError &&
+				error.code === "NO_ALBUM_ERROR"
+			) {
+				console.warn("LastFM track info fetch failed:", error.message);
 			} else {
-				console.error('LastFM track info fetch failed:', error);
+				console.error("LastFM track info fetch failed:", error);
 			}
 
 			// Fallback to MusicBrainz if LastFM fails
 			try {
-				const releases = await getMBTrackReleases(trackName, artistName);
+				const releases = await getMBTrackReleases(
+					trackName,
+					artistName
+				);
 				if (!releases) {
 					const trackInfoObj: TrackInfo = {
 						trackName,
@@ -202,7 +230,8 @@ export const getLatestTrack = async (
 				for (const release of releases) {
 					try {
 						const releaseInfo = await getMBReleaseInfo(release.id);
-						const hasCoverArt = releaseInfo["cover-art-archive"].front ||
+						const hasCoverArt =
+							releaseInfo["cover-art-archive"].front ||
 							releaseInfo["cover-art-archive"].artwork ||
 							releaseInfo["cover-art-archive"].back;
 
@@ -227,7 +256,10 @@ export const getLatestTrack = async (
 							return trackInfoObj;
 						}
 					} catch (error) {
-						console.warn(`Failed to fetch cover art for release ${release.id}:`, error);
+						console.warn(
+							`Failed to fetch cover art for release ${release.id}:`,
+							error
+						);
 						continue;
 					}
 					await wait(1000); // Rate limiting
@@ -247,7 +279,7 @@ export const getLatestTrack = async (
 				cache.set(`${username}-${trackName}`, trackInfoObj);
 				return trackInfoObj;
 			} catch (error) {
-				console.error('MusicBrainz fallback failed:', error);
+				console.error("MusicBrainz fallback failed:", error);
 				// Return basic info if MusicBrainz fallback fails
 				const trackInfoObj: TrackInfo = {
 					trackName,
@@ -264,8 +296,10 @@ export const getLatestTrack = async (
 			}
 		}
 	} catch (error) {
-		console.error('Failed to fetch latest track:', error);
-		return error instanceof Error ? error : new Error('Unknown error occurred');
+		console.error("Failed to fetch latest track:", error);
+		return error instanceof Error
+			? error
+			: new Error("Unknown error occurred");
 	}
 };
 
