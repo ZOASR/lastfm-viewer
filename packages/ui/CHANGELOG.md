@@ -1,5 +1,49 @@
 # @lastfm-viewer/ui
 
+## 0.2.4
+
+### Patch Changes
+
+- refactor: removed api_key prop requirement and moved all api calls to a cloudflare worker to prevent api leaking in the client
+
+    ## Breaking Changes
+
+    ### What Changed
+
+    - Removed the requirement to pass an `api_key` prop to components
+    - All Last.fm API calls are now handled through a Cloudflare Worker instead of directly from the client
+    - Components no longer make direct API calls to Last.fm
+
+    ### Why This Change Was Made
+
+    - Security: Prevents exposure of Last.fm API keys in client-side code
+    - Better API key management: API keys are now managed server-side
+    - Reduced risk of API key abuse: Requests are now proxied through a controlled endpoint
+    - Improved rate limiting: Better control over API request rates
+
+    ### How to Update Your Code
+
+    #### Before:
+
+    ```tsx
+    <LastFmViewer
+    	api_key="your-api-key"
+    	username="your-username"
+    	// other props...
+    />
+    ```
+
+    #### After:
+
+    ```tsx
+    <LastFmViewer
+    	username="your-username"
+    	// other props...
+    />
+    ```
+
+    Simply remove the `api_key` prop from your components. The API calls will now be automatically handled through our hosted Cloudflare Worker.
+
 ## 0.2.3
 
 ### Patch Changes
