@@ -4,10 +4,14 @@ import { APP_VERSION } from "@lastfm-viewer/utils";
 import type { Release, ReleaseInfo, Image, MBObject } from "@lastfm-viewer/utils/MBtypes";
 import type { UserRecentTracksRes, TrackInfoRes } from "@lastfm-viewer/utils/LFMtypes";
 import type { AppContext } from "../types";
+import { cacheResponse, CacheManager, generateCacheKey } from "../cache";
 
 export type Env = {
 	LASTFM_API_KEY: string;
 };
+
+// Create a single CacheManager instance
+const cacheManager = new CacheManager(caches?.default);
 
 // Response schemas
 const ColorsSchema = z.object({
@@ -69,6 +73,9 @@ export class GetUserTracks extends OpenAPIRoute {
 			});
 			if (res.ok) {
 				const tracks = await res.json() as UserRecentTracksRes;
+				const params = { ...c.req.query(), path: c.req.path };
+				const cacheKey = generateCacheKey('USER_TRACKS', params);
+				await cacheResponse(cacheManager, cacheKey, 'USER_TRACKS', tracks);
 				return c.json(tracks);
 			} else {
 				const error = await res.json() as { message: string; error: number };
@@ -118,6 +125,9 @@ export class GetTrackInfo extends OpenAPIRoute {
 				if (!("track" in responseData) || !(responseData.track.album && responseData.track.album.image[3]["#text"])) {
 					return c.json({ error: "No lastfm album for this track" }, 400);
 				}
+				const params = { ...c.req.query(), path: c.req.path };
+				const cacheKey = generateCacheKey('TRACK_INFO', params);
+				await cacheResponse(cacheManager, cacheKey, 'TRACK_INFO', responseData);
 				return c.json(responseData);
 			} else {
 				const error = responseData as { message: string; error: number };
@@ -166,7 +176,11 @@ export class GetMBReleases extends OpenAPIRoute {
 			});
 			const brainzData = await musicbrainzApi.json() as MBObject;
 			if (brainzData.recordings.length > 0) {
-				return c.json(brainzData.recordings[0]?.releases);
+				const releases = brainzData.recordings[0]?.releases;
+				const params = { ...c.req.query(), path: c.req.path };
+				const cacheKey = generateCacheKey('MUSICBRAINZ', params);
+				await cacheResponse(cacheManager, cacheKey, 'MUSICBRAINZ', releases);
+				return c.json(releases);
 			} else {
 				return c.json({ error: "No releases found" }, 400);
 			}
@@ -205,6 +219,9 @@ export class GetMBReleaseInfo extends OpenAPIRoute {
 				}
 			});
 			const releaseInfo = await musicbrainzApi.json() as ReleaseInfo;
+			const params = { ...c.req.query(), path: c.req.path };
+			const cacheKey = generateCacheKey('MUSICBRAINZ', params);
+			await cacheResponse(cacheManager, cacheKey, 'MUSICBRAINZ', releaseInfo);
 			return c.json(releaseInfo);
 		} catch (error) {
 			if (error instanceof Error) {
@@ -237,6 +254,9 @@ export class GetCoverArt extends OpenAPIRoute {
 			const coverArtUrl = `https://coverartarchive.org/release/${mbid}`;
 			const cover = await fetch(coverArtUrl);
 			const covers = await cover.json() as { images: Image[] };
+			const params = { ...c.req.query(), path: c.req.path };
+			const cacheKey = generateCacheKey('COVER_ART', params);
+			await cacheResponse(cacheManager, cacheKey, 'COVER_ART', covers.images);
 			return c.json(covers.images);
 		} catch (error) {
 			if (error instanceof Error) {

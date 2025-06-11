@@ -27,12 +27,12 @@ const openapi = fromHono(app, {
 	docs_url: "/",
 });
 
-// Register OpenAPI endpoints
-openapi.get("/api/lastfm/user-tracks/:username", GetUserTracks);
-openapi.get("/api/lastfm/track-info", GetTrackInfo);
-openapi.get("/api/lastfm/mb-releases", GetMBReleases);
-openapi.get("/api/lastfm/mb-release/:mbid", GetMBReleaseInfo);
-openapi.get("/api/lastfm/cover-art/:mbid", GetCoverArt);
+// Register OpenAPI endpoints with caching
+openapi.get("/api/lastfm/user-tracks/:username", cacheMiddleware('USER_TRACKS'), GetUserTracks as any);
+openapi.get("/api/lastfm/track-info", cacheMiddleware('TRACK_INFO'), GetTrackInfo as any);
+openapi.get("/api/lastfm/mb-releases", cacheMiddleware('MUSICBRAINZ'), GetMBReleases as any);
+openapi.get("/api/lastfm/mb-release/:mbid", cacheMiddleware('MUSICBRAINZ'), GetMBReleaseInfo as any);
+openapi.get("/api/lastfm/cover-art/:mbid", cacheMiddleware('COVER_ART'), GetCoverArt as any);
 
 // Export the Hono app
 export default app;
