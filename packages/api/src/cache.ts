@@ -166,15 +166,17 @@ export const cacheMiddleware = (type: CacheType) => {
 		await next();
 
 		if (c.res.status === 200) {
-			const data = await c.res.json();
+			// Clone the response to avoid consuming the original body
+			const resClone = c.res.clone();
+			const data = await resClone.json();
 			// Convert Headers to Record<string, string>
 			const headers: Record<string, string> = {};
-			c.res.headers.forEach((value, key) => {
+			resClone.headers.forEach((value, key) => {
 				headers[key] = value;
 			});
 			await cacheResponse(cacheManager, cacheKey, type, data, headers);
 			const newResponse = new Response(JSON.stringify(data), {
-				headers: new Headers(c.res.headers),
+				headers: new Headers(resClone.headers),
 				status: 200
 			});
 			newResponse.headers.set('X-Cache', 'MISS');
