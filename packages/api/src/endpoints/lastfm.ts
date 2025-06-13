@@ -1,8 +1,16 @@
 import { z } from "zod";
 import { OpenAPIRoute } from "chanfana";
 import { APP_VERSION } from "@lastfm-viewer/utils";
-import type { Release, ReleaseInfo, Image, MBObject } from "@lastfm-viewer/utils/MBtypes";
-import type { UserRecentTracksRes, TrackInfoRes } from "@lastfm-viewer/utils/LFMtypes";
+import type {
+	Release,
+	ReleaseInfo,
+	Image,
+	MBObject
+} from "@lastfm-viewer/utils/MBtypes";
+import type {
+	UserRecentTracksRes,
+	TrackInfoRes
+} from "@lastfm-viewer/utils/LFMtypes";
 import type { AppContext } from "../types";
 import { cacheResponse, CacheManager, generateCacheKey } from "../cache";
 
@@ -36,7 +44,6 @@ const ErrorSchema = z.object({
 	error: z.string()
 });
 
-
 // User Tracks endpoint
 export class GetUserTracks extends OpenAPIRoute {
 	schema = {
@@ -45,7 +52,10 @@ export class GetUserTracks extends OpenAPIRoute {
 				username: z.string().describe("LastFM username")
 			}),
 			query: z.object({
-				limit: z.string().optional().describe("Number of tracks to return (default: 5)")
+				limit: z
+					.string()
+					.optional()
+					.describe("Number of tracks to return (default: 5)")
 			})
 		},
 		responses: {
@@ -72,13 +82,21 @@ export class GetUserTracks extends OpenAPIRoute {
 				}
 			});
 			if (res.ok) {
-				const tracks = await res.json() as UserRecentTracksRes;
+				const tracks = (await res.json()) as UserRecentTracksRes;
 				const params = { ...c.req.query(), path: c.req.path };
-				const cacheKey = generateCacheKey('USER_TRACKS', params);
-				await cacheResponse(cacheManager, cacheKey, 'USER_TRACKS', tracks);
+				const cacheKey = generateCacheKey("USER_TRACKS", params);
+				await cacheResponse(
+					cacheManager,
+					cacheKey,
+					"USER_TRACKS",
+					tracks
+				);
 				return c.json(tracks);
 			} else {
-				const error = await res.json() as { message: string; error: number };
+				const error = (await res.json()) as {
+					message: string;
+					error: number;
+				};
 				return c.json({ error: error.message }, 400);
 			}
 		} catch (error) {
@@ -120,17 +138,36 @@ export class GetTrackInfo extends OpenAPIRoute {
 					"User-Agent": `LastFMViewer/${APP_VERSION}`
 				}
 			});
-			const responseData = await res.json() as TrackInfoRes | { message: string; error: number };
+			const responseData = (await res.json()) as
+				| TrackInfoRes
+				| { message: string; error: number };
 			if (res.ok) {
-				if (!("track" in responseData) || !(responseData.track.album && responseData.track.album.image[3]["#text"])) {
-					return c.json({ error: "No lastfm album for this track" }, 400);
+				if (
+					!("track" in responseData) ||
+					!(
+						responseData.track.album &&
+						responseData.track.album.image[3]["#text"]
+					)
+				) {
+					return c.json(
+						{ error: "No lastfm album for this track" },
+						400
+					);
 				}
 				const params = { ...c.req.query(), path: c.req.path };
-				const cacheKey = generateCacheKey('TRACK_INFO', params);
-				await cacheResponse(cacheManager, cacheKey, 'TRACK_INFO', responseData);
+				const cacheKey = generateCacheKey("TRACK_INFO", params);
+				await cacheResponse(
+					cacheManager,
+					cacheKey,
+					"TRACK_INFO",
+					responseData
+				);
 				return c.json(responseData);
 			} else {
-				const error = responseData as { message: string; error: number };
+				const error = responseData as {
+					message: string;
+					error: number;
+				};
 				return c.json({ error: error.message }, 400);
 			}
 		} catch (error) {
@@ -174,12 +211,17 @@ export class GetMBReleases extends OpenAPIRoute {
 					"User-Agent": `LastFMViewer/${APP_VERSION}`
 				}
 			});
-			const brainzData = await musicbrainzApi.json() as MBObject;
+			const brainzData = (await musicbrainzApi.json()) as MBObject;
 			if (brainzData.recordings.length > 0) {
 				const releases = brainzData.recordings[0]?.releases;
 				const params = { ...c.req.query(), path: c.req.path };
-				const cacheKey = generateCacheKey('MUSICBRAINZ', params);
-				await cacheResponse(cacheManager, cacheKey, 'MUSICBRAINZ', releases);
+				const cacheKey = generateCacheKey("MUSICBRAINZ", params);
+				await cacheResponse(
+					cacheManager,
+					cacheKey,
+					"MUSICBRAINZ",
+					releases
+				);
 				return c.json(releases);
 			} else {
 				return c.json({ error: "No releases found" }, 400);
@@ -218,10 +260,15 @@ export class GetMBReleaseInfo extends OpenAPIRoute {
 					"User-Agent": `LastFMViewer/${APP_VERSION}`
 				}
 			});
-			const releaseInfo = await musicbrainzApi.json() as ReleaseInfo;
+			const releaseInfo = (await musicbrainzApi.json()) as ReleaseInfo;
 			const params = { ...c.req.query(), path: c.req.path };
-			const cacheKey = generateCacheKey('MUSICBRAINZ', params);
-			await cacheResponse(cacheManager, cacheKey, 'MUSICBRAINZ', releaseInfo);
+			const cacheKey = generateCacheKey("MUSICBRAINZ", params);
+			await cacheResponse(
+				cacheManager,
+				cacheKey,
+				"MUSICBRAINZ",
+				releaseInfo
+			);
 			return c.json(releaseInfo);
 		} catch (error) {
 			if (error instanceof Error) {
@@ -253,10 +300,15 @@ export class GetCoverArt extends OpenAPIRoute {
 		try {
 			const coverArtUrl = `https://coverartarchive.org/release/${mbid}`;
 			const cover = await fetch(coverArtUrl);
-			const covers = await cover.json() as { images: Image[] };
+			const covers = (await cover.json()) as { images: Image[] };
 			const params = { ...c.req.query(), path: c.req.path };
-			const cacheKey = generateCacheKey('COVER_ART', params);
-			await cacheResponse(cacheManager, cacheKey, 'COVER_ART', covers.images);
+			const cacheKey = generateCacheKey("COVER_ART", params);
+			await cacheResponse(
+				cacheManager,
+				cacheKey,
+				"COVER_ART",
+				covers.images
+			);
 			return c.json(covers.images);
 		} catch (error) {
 			if (error instanceof Error) {

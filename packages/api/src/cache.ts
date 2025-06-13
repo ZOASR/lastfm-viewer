@@ -31,14 +31,17 @@ export const CACHE_CONFIG = {
 export type CacheType = keyof typeof CACHE_CONFIG;
 
 // Enhanced cache key generation with request fingerprinting
-export function generateCacheKey(type: CacheType, params: Record<string, any>): string {
+export function generateCacheKey(
+	type: CacheType,
+	params: Record<string, any>
+): string {
 	// Sort params for consistent key generation
 	const sortedParams = Object.keys(params)
 		.sort()
-		.map(key => `${key}=${encodeURIComponent(params[key] || '')}`)
-		.join('&');
+		.map((key) => `${key}=${encodeURIComponent(params[key] || "")}`)
+		.join("&");
 
-	const key = `lfmv-cache:${type}:${btoa(sortedParams).replace(/[/+=]/g, '_')}`;
+	const key = `lfmv-cache:${type}:${btoa(sortedParams).replace(/[/+=]/g, "_")}`;
 	return key;
 }
 
@@ -60,8 +63,9 @@ export class CacheManager {
 
 	constructor(cache?: Cache) {
 		this.cache = cache;
-		this.isCloudflare = typeof caches !== 'undefined' && caches.default !== undefined;
-		this.baseUrl = 'https://lastfm-viewer.cache';
+		this.isCloudflare =
+			typeof caches !== "undefined" && caches.default !== undefined;
+		this.baseUrl = "https://lastfm-viewer.cache";
 	}
 
 	private getCacheUrl(key: string): string {
@@ -74,7 +78,8 @@ export class CacheManager {
 				const cacheUrl = this.getCacheUrl(key);
 				const response = await this.cache.match(cacheUrl);
 				if (response) {
-					const cachedData = await response.json() as CachedResponse;
+					const cachedData =
+						(await response.json()) as CachedResponse;
 					if (this.isValid(cachedData)) {
 						return cachedData;
 					}
@@ -92,7 +97,12 @@ export class CacheManager {
 		return null;
 	}
 
-	async set(key: string, data: any, type: CacheType, headers?: Record<string, string>): Promise<void> {
+	async set(
+		key: string,
+		data: any,
+		type: CacheType,
+		headers?: Record<string, string>
+	): Promise<void> {
 		const config = CACHE_CONFIG[type];
 		const cachedResponse: CachedResponse = {
 			data,
@@ -106,8 +116,8 @@ export class CacheManager {
 				const cacheUrl = this.getCacheUrl(key);
 				const response = new Response(JSON.stringify(cachedResponse), {
 					headers: {
-						'Content-Type': 'application/json',
-						'Cache-Control': `public, max-age=${config.maxAge}, stale-while-revalidate=${config.staleWhileRevalidate}`,
+						"Content-Type": "application/json",
+						"Cache-Control": `public, max-age=${config.maxAge}, stale-while-revalidate=${config.staleWhileRevalidate}`,
 						...headers
 					}
 				});
@@ -156,7 +166,7 @@ export const cacheMiddleware = (type: CacheType) => {
 		const cached = await cacheManager.get(cacheKey);
 		if (cached) {
 			const headers = new Headers(cached.headers);
-			headers.set('X-Cache', 'HIT');
+			headers.set("X-Cache", "HIT");
 			return new Response(JSON.stringify(cached.data), {
 				headers,
 				status: 200
@@ -179,7 +189,7 @@ export const cacheMiddleware = (type: CacheType) => {
 				headers: new Headers(resClone.headers),
 				status: 200
 			});
-			newResponse.headers.set('X-Cache', 'MISS');
+			newResponse.headers.set("X-Cache", "MISS");
 			return newResponse;
 		}
 	};
@@ -213,7 +223,11 @@ export class RateLimiter {
 		this.windowMs = windowMs;
 	}
 
-	check(identifier: string): { allowed: boolean; remaining: number; resetTime: number } {
+	check(identifier: string): {
+		allowed: boolean;
+		remaining: number;
+		resetTime: number;
+	} {
 		const now = Date.now();
 		const key = identifier;
 		const record = this.requests.get(key);
@@ -222,15 +236,27 @@ export class RateLimiter {
 			// New window or expired
 			const resetTime = now + this.windowMs;
 			this.requests.set(key, { count: 1, resetTime });
-			return { allowed: true, remaining: this.maxRequests - 1, resetTime };
+			return {
+				allowed: true,
+				remaining: this.maxRequests - 1,
+				resetTime
+			};
 		}
 
 		if (record.count >= this.maxRequests) {
-			return { allowed: false, remaining: 0, resetTime: record.resetTime };
+			return {
+				allowed: false,
+				remaining: 0,
+				resetTime: record.resetTime
+			};
 		}
 
 		record.count++;
-		return { allowed: true, remaining: this.maxRequests - record.count, resetTime: record.resetTime };
+		return {
+			allowed: true,
+			remaining: this.maxRequests - record.count,
+			resetTime: record.resetTime
+		};
 	}
 
 	// Clean up expired entries
@@ -243,4 +269,3 @@ export class RateLimiter {
 		}
 	}
 }
-
