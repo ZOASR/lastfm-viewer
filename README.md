@@ -20,9 +20,9 @@ lastfm-viewer is a collection of ui web components to view recent scrobbles for 
 
 This is a monorepo hosting the `lastfm-viewer` npm packages:
 
--   <a href="https://github.com/ZOASR/lastfm-viewer-react">lastfm-viewer-react</a>
--   <a href="https://github.com/ZOASR/lastfm-viewer-solid">lastfm-viewer-solid</a>
--   <a href="https://github.com/ZOASR/lastfm-viewer-svelte">lastfm-viewer-svelte</a>
+- <a href="https://github.com/ZOASR/lastfm-viewer-react">lastfm-viewer-react</a>
+- <a href="https://github.com/ZOASR/lastfm-viewer-solid">lastfm-viewer-solid</a>
+- <a href="https://github.com/ZOASR/lastfm-viewer-svelte">lastfm-viewer-svelte</a>
 
 <p align="center">
   <img src="https://github.com/ZOASR/solid-lastfm-viewer/blob/main/images/Preview_1.png" style="border-radius: 10px"/>
@@ -36,14 +36,20 @@ This is a monorepo hosting the `lastfm-viewer` npm packages:
 Install it:
 
 ```bash
-npm i @lastfm-viewer/[react|svelte|solid]
-# or
-yarn add @lastfm-viewer/[react|svelte|solid]
-# or
-pnpm add @lastfm-viewer/[react|svelte|solid]
+# For React
+npm i @lastfm-viewer/react
+# or for Svelte
+npm i @lastfm-viewer/svelte
+# or for Solid
+npm i @lastfm-viewer/solid
+
+# Alternatively, use yarn, pnpm, or bun
+# yarn add @lastfm-viewer/react  # or svelte/solid
+# pnpm add @lastfm-viewer/react  # or svelte/solid
+# bun add @lastfm-viewer/react   # or svelte/solid
 ```
 
-# Get Started
+## Get Started
 
 This is a [turborepo](https://turbo.build/repo) development monorepo
 
@@ -60,7 +66,7 @@ pnpm i
 yarn install
 ```
 
-# Run the developement server
+## Run the development server
 
 ```sh
 pnpm run dev
@@ -74,6 +80,6 @@ This Turborepo includes the following packages and apps:
 
 ### Apps and Packages
 
--   `lastfm-viewer-react`: [@lastfm-viewer/react](https://github.com/ZOASR/lastfm-viewer-react)
--   `lastfm-viewer-solid`: [@lastfm-viewer/solid](https://github.com/ZOASR/lastfm-viewer-solid)
--   `lastfm-viewer-svelte`: [@lastfm-viewer/svelte](https://github.com/ZOASR/lastfm-viewer-svelte)
+- `lastfm-viewer-react`: [@lastfm-viewer/react](https://github.com/ZOASR/lastfm-viewer-react)
+- `lastfm-viewer-solid`: [@lastfm-viewer/solid](https://github.com/ZOASR/lastfm-viewer-solid)
+- `lastfm-viewer-svelte`: [@lastfm-viewer/svelte](https://github.com/ZOASR/lastfm-viewer-svelte)
