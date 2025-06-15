@@ -1,5 +1,14 @@
 # @lastfm-viewer/ui
 
+## 0.3.0
+
+### Minor Changes
+
+- feat: optimize source maps configuration in shared vite config
+
+    - Add sourcemapExcludeSources: true to shared Vite configuration
+    - Provides default optimization for all projects using the shared config
+
 ## 0.2.4
 
 ### Patch Changes
