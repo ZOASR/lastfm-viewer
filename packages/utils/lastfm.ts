@@ -1,5 +1,5 @@
 import type { Image, Release, ReleaseInfo } from "./MBtypes";
-import type { Track, TrackInfoRes, UserRecentTracksRes } from "./LFMtypes";
+import type { TrackInfoRes, UserRecentTracksRes } from "./LFMtypes";
 import { Colors, TrackInfo } from "./types";
 import { map, rgb2hsl, wait } from "./utils";
 
