@@ -1,5 +1,5 @@
 import type { Image, Release, ReleaseInfo } from "./MBtypes";
-import type { TrackInfoRes, UserRecentTracksRes } from "./LFMtypes";
+import type { Track, TrackInfoRes, UserRecentTracksRes } from "./LFMtypes";
 import { Colors, TrackInfo } from "./types";
 import { map, rgb2hsl, wait } from "./utils";
 
@@ -164,6 +164,12 @@ export const getLatestTrack = async (
 		// Get user's recent tracks
 		const userData = await getUserTracks(username, 5);
 		const currentTrack = userData.recenttracks.track[0];
+		if (!currentTrack) {
+			throw new LastFMError(
+				"No recent tracks found for this user",
+				"NO_RECENT_TRACKS_ERROR"
+			);
+		}
 
 		// Extract basic track info
 		const trackName = currentTrack.name;
@@ -171,6 +177,7 @@ export const getLatestTrack = async (
 		if (cached) return cached;
 		const artistName = currentTrack.artist["#text"];
 		const isNowplaying =
+			currentTrack &&
 			"@attr" in currentTrack &&
 			currentTrack["@attr"]?.nowplaying === "true";
 		const pastTracks = userData.recenttracks.track;
