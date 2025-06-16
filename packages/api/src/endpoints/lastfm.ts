@@ -12,7 +12,7 @@ import type {
 	TrackInfoRes
 } from "@lastfm-viewer/utils/LFMtypes";
 import type { AppContext } from "../types";
-import { cacheResponse, CacheManager, generateCacheKey } from "../cache";
+import { CacheManager, generateCacheKey, type CacheType } from "../cache";
 
 export type Env = {
 	LASTFM_API_KEY: string;
@@ -83,13 +83,19 @@ export class GetUserTracks extends OpenAPIRoute {
 			});
 			if (res.ok) {
 				const tracks = (await res.json()) as UserRecentTracksRes;
-				const params = { ...c.req.query(), path: c.req.path };
-				const cacheKey = generateCacheKey("USER_TRACKS", params);
-				await cacheResponse(
-					cacheManager,
+				const cacheKey = generateCacheKey(
+					"https://ws.audioscrobbler.com/2.0/",
+					"",
+					{
+						...c.req.query(),
+						method: "user.getrecenttracks",
+						user: username
+					}
+				);
+				await cacheManager.set(
 					cacheKey,
-					"USER_TRACKS",
-					tracks
+					new Response(JSON.stringify(tracks)),
+					"USER_TRACKS" as CacheType
 				);
 				return c.json(tracks);
 			} else {
@@ -154,13 +160,15 @@ export class GetTrackInfo extends OpenAPIRoute {
 						400
 					);
 				}
-				const params = { ...c.req.query(), path: c.req.path };
-				const cacheKey = generateCacheKey("TRACK_INFO", params);
-				await cacheResponse(
-					cacheManager,
+				const cacheKey = generateCacheKey(
+					"https://ws.audioscrobbler.com/2.0/",
+					"",
+					{ ...c.req.query(), method: "track.getInfo" }
+				);
+				await cacheManager.set(
 					cacheKey,
-					"TRACK_INFO",
-					responseData
+					new Response(JSON.stringify(responseData)),
+					"TRACK_INFO" as CacheType
 				);
 				return c.json(responseData);
 			} else {
@@ -214,13 +222,15 @@ export class GetMBReleases extends OpenAPIRoute {
 			const brainzData = (await musicbrainzApi.json()) as MBObject;
 			if (brainzData.recordings.length > 0) {
 				const releases = brainzData.recordings[0]?.releases;
-				const params = { ...c.req.query(), path: c.req.path };
-				const cacheKey = generateCacheKey("MUSICBRAINZ", params);
-				await cacheResponse(
-					cacheManager,
+				const cacheKey = generateCacheKey(
+					"https://musicbrainz.org/ws/2/recording/",
+					"",
+					{ ...c.req.query(), path: c.req.path }
+				);
+				await cacheManager.set(
 					cacheKey,
-					"MUSICBRAINZ",
-					releases
+					new Response(JSON.stringify(releases)),
+					"MUSICBRAINZ" as CacheType
 				);
 				return c.json(releases);
 			} else {
@@ -261,13 +271,15 @@ export class GetMBReleaseInfo extends OpenAPIRoute {
 				}
 			});
 			const releaseInfo = (await musicbrainzApi.json()) as ReleaseInfo;
-			const params = { ...c.req.query(), path: c.req.path };
-			const cacheKey = generateCacheKey("MUSICBRAINZ", params);
-			await cacheResponse(
-				cacheManager,
+			const cacheKey = generateCacheKey(
+				`https://musicbrainz.org/ws/2/release/${mbid}`,
+				"",
+				{ ...c.req.query(), path: c.req.path }
+			);
+			await cacheManager.set(
 				cacheKey,
-				"MUSICBRAINZ",
-				releaseInfo
+				new Response(JSON.stringify(releaseInfo)),
+				"MUSICBRAINZ" as CacheType
 			);
 			return c.json(releaseInfo);
 		} catch (error) {
@@ -301,13 +313,15 @@ export class GetCoverArt extends OpenAPIRoute {
 			const coverArtUrl = `https://coverartarchive.org/release/${mbid}`;
 			const cover = await fetch(coverArtUrl);
 			const covers = (await cover.json()) as { images: Image[] };
-			const params = { ...c.req.query(), path: c.req.path };
-			const cacheKey = generateCacheKey("COVER_ART", params);
-			await cacheResponse(
-				cacheManager,
+			const cacheKey = generateCacheKey(
+				`https://coverartarchive.org/release/${mbid}`,
+				"",
+				{ ...c.req.query(), path: c.req.path }
+			);
+			await cacheManager.set(
 				cacheKey,
-				"COVER_ART",
-				covers.images
+				new Response(JSON.stringify(covers.images)),
+				"COVER_ART" as CacheType
 			);
 			return c.json(covers.images);
 		} catch (error) {

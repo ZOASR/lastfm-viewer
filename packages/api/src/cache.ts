@@ -1,218 +1,118 @@
 import type { Context } from "hono";
 
-// Cache configuration for different types of data
+// Cache configuration for different types of data, using only TTL for max-age
 export const CACHE_CONFIG = {
 	// User tracks change frequently - short cache
 	USER_TRACKS: {
-		ttl: 10, // 10 seconds
-		maxAge: 10,
-		staleWhileRevalidate: 60 // 1 minute
+		ttl: 10 // 10 seconds
 	},
 	// Track info is relatively static
 	TRACK_INFO: {
-		ttl: 3600, // 1 hour
-		maxAge: 3600,
-		staleWhileRevalidate: 86400 // 24 hours
+		ttl: 86400 // 1 day
 	},
 	// MusicBrainz data is very static
 	MUSICBRAINZ: {
-		ttl: 86400 * 7, // 1 week
-		maxAge: 86400 * 7,
-		staleWhileRevalidate: 86400 * 30 // 30 days
+		ttl: 86400 * 7 // 1 week
 	},
 	// Cover art URLs rarely change
 	COVER_ART: {
-		ttl: 86400 * 30, // 30 days
-		maxAge: 86400 * 30,
-		staleWhileRevalidate: 86400 * 90 // 90 days
+		ttl: 86400 * 30 // 30 days
 	}
 };
 
 export type CacheType = keyof typeof CACHE_CONFIG;
 
-// Enhanced cache key generation with request fingerprinting
+// Generates a Request object to be used as a cache key.
 export function generateCacheKey(
-	type: CacheType,
-	params: Record<string, any>
-): string {
-	// Sort params for consistent key generation
-	const sortedParams = Object.keys(params)
-		.sort()
-		.map((key) => `${key}=${encodeURIComponent(params[key] || "")}`)
-		.join("&");
+	baseUrl: string,
+	path: string,
+	params: Record<string, string | string[]>
+): Request {
+	const url = new URL(baseUrl);
+	url.pathname = path;
+	Object.entries(params).forEach(([key, value]) => {
+		url.searchParams.set(
+			key,
+			Array.isArray(value) ? value.join(",") : value
+		);
+	});
 
-	const key = `lfmv-cache:${type}:${btoa(sortedParams).replace(/[/+=]/g, "_")}`;
-	return key;
+	return new Request(url.toString(), { method: "GET" });
 }
 
-// Cache response interface
-interface CachedResponse {
-	data: any;
-	timestamp: number;
-	ttl: number;
-	headers?: Record<string, string>;
-}
-
-// Smart caching utility class
+// Simplified CacheManager to work directly with the Cloudflare Cache API
 export class CacheManager {
-	private cache: Cache | undefined;
-	private memoryCache = new Map<string, CachedResponse>();
-	private readonly MAX_MEMORY_CACHE_SIZE = 1000;
-	private readonly isCloudflare: boolean;
-	private readonly baseUrl: string;
+	private cache: Cache;
 
 	constructor(cache?: Cache) {
-		this.cache = cache;
-		this.isCloudflare =
-			typeof caches !== "undefined" && caches.default !== undefined;
-		this.baseUrl = "https://lastfm-viewer.cache";
+		// Default to the standard Cloudflare cache
+		this.cache = cache || caches.default;
 	}
 
-	private getCacheUrl(key: string): string {
-		return `${this.baseUrl}/${key}`;
+	async get(req: Request): Promise<Response | undefined> {
+		return this.cache.match(req);
 	}
 
-	async get(key: string): Promise<CachedResponse | null> {
-		if (this.isCloudflare && this.cache) {
-			try {
-				const cacheUrl = this.getCacheUrl(key);
-				const response = await this.cache.match(cacheUrl);
-				if (response) {
-					const cachedData =
-						(await response.json()) as CachedResponse;
-					if (this.isValid(cachedData)) {
-						return cachedData;
-					}
-				}
-			} catch (error) {
-				// Silent fail - fall back to memory cache
-			}
-		}
-
-		const memCached = this.memoryCache.get(key);
-		if (memCached && this.isValid(memCached)) {
-			return memCached;
-		}
-
-		return null;
-	}
-
-	async set(
-		key: string,
-		data: any,
-		type: CacheType,
-		headers?: Record<string, string>
-	): Promise<void> {
+	async set(req: Request, res: Response, type: CacheType): Promise<void> {
 		const config = CACHE_CONFIG[type];
-		const cachedResponse: CachedResponse = {
-			data,
-			timestamp: Date.now(),
-			ttl: config.ttl * 1000,
-			headers
-		};
+		// Clone the response to modify headers without affecting the original response
+		const cacheableResponse = new Response(res.body, res);
 
-		if (this.isCloudflare && this.cache) {
-			try {
-				const cacheUrl = this.getCacheUrl(key);
-				const response = new Response(JSON.stringify(cachedResponse), {
-					headers: {
-						"Content-Type": "application/json",
-						"Cache-Control": `public, max-age=${config.maxAge}, stale-while-revalidate=${config.staleWhileRevalidate}`,
-						...headers
-					}
-				});
-				await this.cache.put(cacheUrl, response);
-			} catch (error) {
-				// Silent fail - continue with memory cache
-			}
-		}
+		// Set Cache-Control header based on the cache type's TTL
+		cacheableResponse.headers.set(
+			"Cache-Control",
+			`public, max-age=${config.ttl}`
+		);
 
-		if (this.memoryCache.size >= this.MAX_MEMORY_CACHE_SIZE) {
-			this.evictOldest();
-		}
-		this.memoryCache.set(key, cachedResponse);
+		await this.cache.put(req, cacheableResponse);
 	}
 
-	private isValid(cached: CachedResponse): boolean {
-		if (!cached.timestamp || !cached.ttl) return false;
-		const age = Date.now() - cached.timestamp;
-		return age < cached.ttl;
-	}
-
-	private evictOldest(): void {
-		let oldestKey: string | undefined;
-		let oldestTime = Infinity;
-
-		for (const [key, value] of this.memoryCache.entries()) {
-			if (value.timestamp < oldestTime) {
-				oldestTime = value.timestamp;
-				oldestKey = key;
-			}
-		}
-
-		if (oldestKey) {
-			this.memoryCache.delete(oldestKey);
-		}
+	async delete(req: Request): Promise<boolean> {
+		return this.cache.delete(req);
 	}
 }
 
-// Cache middleware factory
-export const cacheMiddleware = (type: CacheType) => {
+// Hono middleware for caching responses
+export const withCache = (type: CacheType) => {
 	return async (c: Context, next: () => Promise<void>) => {
-		const cacheManager = new CacheManager(caches?.default);
-		const params = { ...c.req.query(), path: c.req.path };
-		const cacheKey = generateCacheKey(type, params);
+		// The manager is lightweight, so creating it here is acceptable.
+		// For larger apps, you might inject it via context.
+		const cacheManager = new CacheManager(caches.default);
+		const url = new URL(c.req.url);
+		const cacheKeyRequest = generateCacheKey(
+			url.origin,
+			url.pathname,
+			c.req.query()
+		);
 
-		const cached = await cacheManager.get(cacheKey);
-		if (cached) {
-			const headers = new Headers(cached.headers);
-			headers.set("X-Cache", "HIT");
-			return new Response(JSON.stringify(cached.data), {
-				headers,
-				status: 200
-			});
+		const cachedResponse = await cacheManager.get(cacheKeyRequest);
+
+		if (cachedResponse) {
+			// Cache HIT: Return the cached response directly
+			const response = new Response(cachedResponse.body, cachedResponse);
+			response.headers.set("X-Cache", "HIT");
+			return response;
 		}
 
+		// Cache MISS: Proceed with the request
 		await next();
 
-		if (c.res.status === 200) {
-			// Clone the response to avoid consuming the original body
-			const resClone = c.res.clone();
-			const data = await resClone.json();
-			// Convert Headers to Record<string, string>
-			const headers: Record<string, string> = {};
-			resClone.headers.forEach((value, key) => {
-				headers[key] = value;
-			});
-			await cacheResponse(cacheManager, cacheKey, type, data, headers);
-			const newResponse = new Response(JSON.stringify(data), {
-				headers: new Headers(resClone.headers),
-				status: 200
-			});
-			newResponse.headers.set("X-Cache", "MISS");
-			return newResponse;
+		// After the response is generated, cache it if it's a successful one
+		if (c.res.ok) {
+			// Clone the response to cache it without affecting the final response
+			const responseToCache = c.res.clone();
+			// Add a header to the response sent to the client
+			c.res.headers.set("X-Cache", "MISS");
+
+			// Use waitUntil to perform caching out-of-band
+			c.executionCtx.waitUntil(
+				cacheManager.set(cacheKeyRequest, responseToCache, type)
+			);
 		}
 	};
 };
 
-// Cache response utility
-export async function cacheResponse(
-	cacheManager: CacheManager | undefined,
-	key: string,
-	type: CacheType,
-	data: any,
-	headers?: Record<string, string>
-): Promise<void> {
-	if (!cacheManager) return;
-
-	try {
-		await cacheManager.set(key, data, type, headers);
-	} catch (error) {
-		// Silent fail - caching is best effort
-	}
-}
-
-// Rate limiting with cache integration
+// Rate limiting with cache integration (unchanged)
 export class RateLimiter {
 	private requests = new Map<string, { count: number; resetTime: number }>();
 	private readonly maxRequests: number;

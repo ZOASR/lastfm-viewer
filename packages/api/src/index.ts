@@ -1,6 +1,6 @@
 import { fromHono } from "chanfana";
 import { Hono } from "hono";
-import { cacheMiddleware, RateLimiter } from "./cache";
+import { withCache, RateLimiter } from "./cache";
 import {
 	GetUserTracks,
 	GetTrackInfo,
@@ -140,28 +140,28 @@ app.use("*", async (c, next) => {
 // Register OpenAPI endpoints with caching
 openapi.get(
 	"/api/lastfm/user-tracks/:username",
-	cacheMiddleware("USER_TRACKS"),
-	GetUserTracks as any
+	withCache("USER_TRACKS"),
+	GetUserTracks.prototype.handle
 );
 openapi.get(
 	"/api/lastfm/track-info",
-	cacheMiddleware("TRACK_INFO"),
-	GetTrackInfo as any
+	withCache("TRACK_INFO"),
+	GetTrackInfo.prototype.handle
 );
 openapi.get(
 	"/api/lastfm/mb-releases",
-	cacheMiddleware("MUSICBRAINZ"),
-	GetMBReleases as any
+	withCache("MUSICBRAINZ"),
+	GetMBReleases.prototype.handle
 );
 openapi.get(
 	"/api/lastfm/mb-release/:mbid",
-	cacheMiddleware("MUSICBRAINZ"),
-	GetMBReleaseInfo as any
+	withCache("MUSICBRAINZ"),
+	GetMBReleaseInfo.prototype.handle
 );
 openapi.get(
 	"/api/lastfm/cover-art/:mbid",
-	cacheMiddleware("COVER_ART"),
-	GetCoverArt as any
+	withCache("COVER_ART"),
+	GetCoverArt.prototype.handle
 );
 
 // Export the Hono app
