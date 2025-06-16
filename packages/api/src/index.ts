@@ -1,4 +1,4 @@
-import { fromHono } from "chanfana";
+import { fromHono, OpenAPIRoute } from "chanfana";
 import { Hono } from "hono";
 import { withCache, RateLimiter } from "./cache";
 import {
@@ -141,27 +141,27 @@ app.use("*", async (c, next) => {
 openapi.get(
 	"/api/lastfm/user-tracks/:username",
 	withCache("USER_TRACKS"),
-	GetUserTracks.prototype.handle
+	GetUserTracks as any
 );
 openapi.get(
 	"/api/lastfm/track-info",
 	withCache("TRACK_INFO"),
-	GetTrackInfo.prototype.handle
+	GetTrackInfo as any
 );
 openapi.get(
 	"/api/lastfm/mb-releases",
 	withCache("MUSICBRAINZ"),
-	GetMBReleases.prototype.handle
+	GetMBReleases as any
 );
 openapi.get(
 	"/api/lastfm/mb-release/:mbid",
 	withCache("MUSICBRAINZ"),
-	GetMBReleaseInfo.prototype.handle
+	GetMBReleaseInfo as any
 );
 openapi.get(
 	"/api/lastfm/cover-art/:mbid",
 	withCache("COVER_ART"),
-	GetCoverArt.prototype.handle
+	GetCoverArt as any
 );
 
 // Export the Hono app
